@@ -1,0 +1,13 @@
+prefix: 'iwwmd'
+user_field_count: 15
+model_objects:
+  - name: Baseline
+    code: bl
+  - name: Geometry
+    code: wn
+  - name: Control
+    code: ctl
+  - name: Wesnet Live Data
+    code: ld
+  - name: Geometry Template
+    code: wnt

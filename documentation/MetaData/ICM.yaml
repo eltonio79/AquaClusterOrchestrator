@@ -1,0 +1,5 @@
+prefix: 'dropbear'
+user_field_count: 10
+model_objects:
+  - name: Asset Network
+    code: hw

@@ -1,0 +1,237 @@
+---
+description: "Cursor rules for Ruby scripts that interact with hydraulic models (InfoWorks ICM, InfoAsset Manager, etc.)"
+globs: ["**/*.rb"]
+alwaysApply: true
+---
+
+# Hydraulic Model Ruby Script Development Rules
+
+## Context and Reference
+When generating Ruby code for hydraulic modeling applications, always reference and learn from the extensive examples in this workspace:
+- **InfoWorks ICM scripts**: `Open-Source-Support/01 InfoWorks ICM/01 Ruby/01 InfoWorks/`
+- **InfoAsset Manager scripts**: `Open-Source-Support/02 InfoAsset Manager/01 Ruby/`
+- **InfoWorks WS Pro scripts**: `Open-Source-Support/04 InfoWorks WS Pro/01 Ruby/`
+- **ModelBuilder-main**: `ModelBuilder-main/wombat/`
+
+## Documentation and Method Validation
+Reference documentation as the source of truth for methods, tables, and field names. 
+- `documentation/`
+**CRITICAL**: Always validate methods and classes against actual documentation and examples. Never invent or assume methods exist.
+
+
+### Method Validation Rules:
+1. **NEVER invent methods** - only use methods found in documentation or workspace examples
+2. **Always check workspace examples** before using any method
+3. **Use codebase_search** to find actual usage patterns in the workspace
+4. **When unsure, create test scripts** to verify method existence and behavior
+5. **Prefer documented patterns** over assumed functionality
+
+### Documentation Link Guidelines:
+- **Provide specific help links** using the format: `@https://help.autodesk.com/...` 
+- **Include relevant class/method pages** for complex operations
+- **Reference multiple pages** when working with different object types
+- **Always cite documentation** when using specific API methods
+- **Useful to provide links for**: WSOpenNetwork, WSModelObject, WSApplication, selection operations, result access
+
+## File management
+Create and edit scripts in the `Local-files\Working files\` path until the user specifies to store it elsewhere.
+
+## Script Type Detection
+
+### Exchange vs UI Scripts
+Automatically detect script type to determine testing approach:
+
+**Exchange Script Indicators:**
+- Uses `WSApplication.open()` or `WSApplication.open(path)`
+- Contains database operations without `WSApplication.current_network`
+- Has database-level operations like `database.new_model_object()`
+- Comments indicate "EXCHANGE" mode
+- No user interaction methods (no `WSApplication.prompt`, `input_box`, etc.)
+
+**UI Script Indicators:**
+- Uses `WSApplication.current_network` 
+- Uses `WSApplication.current_database`
+- Contains user interaction methods: `prompt`, `input_box`, `file_dialog`, `message_box`
+- Comments indicate "UI" mode
+- Requires user selection or interaction
+
+**Key Difference:**
+- **Exchange**: Runs headless via command line, accesses database with `WSApplication.open()`
+- **UI**: Runs from application menu, accesses current context with `current_network` or `current_database`
+
+## Core Patterns and Conventions
+
+### 1. Network Access Pattern
+```ruby
+# Always start with current network access
+net = WSApplication.current_network
+# Set scenario if needed
+net.current_scenario = 'Scenario Name'
+```
+
+### 2. Transaction Management
+```ruby
+# Use transactions for data modifications
+net.transaction_begin
+# ... perform operations ...
+net.transaction_commit
+# Or commit with message
+net.commit 'Description of changes made'
+```
+
+### 3. Object Iteration Patterns
+```ruby
+# Iterate over row objects
+net.row_objects('table_name').each do |ro|
+    # Access properties
+    ro.property_name
+    # Modify properties
+    ro.property_name = new_value
+    # Write changes
+    ro.write
+end
+
+# Iterate over selected objects
+net.row_objects_selection('table_name').each do |ro|
+    # Work with selected objects
+end
+```
+
+### 4. Common Table Names
+```ruby
+# Return a list of table names
+net.table_names
+# Get table information including fields and data type in json format using:
+net.table('table_name').tableinfo_json
+```
+- **InfoWorks ICM**: `hw_river_reach`, `hw_subcatchment`, `hw_land_use`, `hw_runoff_surface`
+- **InfoAsset Manager**: `node`, `pipe`, `cctvsurvey`
+- **General**: `_nodes`, `_links` (for network objects)
+- **InfoWorks WS Pro**: `wn_node`,`wn_pipe`, `wn_pump`, `wn_valve`, `wn_reservoir`,`wn_fixed_head`
+
+
+### 5. Selection and Filtering
+```ruby
+# Clear selection
+net.clear_selection
+# Select objects
+ro.selected = true
+# Get selection collection
+roc = net.row_object_collection_selection('_nodes')
+# Select objects using SQL Query
+net.run_SQL('_links', "SELECT WHERE ...")
+```
+
+### 6. Data Export Patterns
+```ruby
+# CSV Export
+net.odec_export_ex('CSV', config, options, 'table_name', 'output.csv')
+# Shapefile Export
+net.odec_export_ex('SHP', config, options, 'table_name', 'output.shp')
+```
+
+### 7. Error Handling and Logging
+```ruby
+# Use puts for logging
+puts "Processing #{ro.id}"
+puts "Operation completed successfully"
+
+# Check for nil objects
+if !ro.nil? && !ro.property_name.nil?
+    # Safe to proceed
+end
+```
+
+### 8. File Path Handling
+```ruby
+# Get script directory for relative paths
+script_dir = File.dirname(WSApplication.script_file)
+config_file = script_dir + '\config.cfg'
+```
+
+## Code Generation Guidelines
+
+1. **VALIDATE ALL METHODS** against documentation and examples before use
+2. **Search workspace examples** using codebase_search for similar functionality
+3. **Always include proper network initialization** at the start
+4. **Use transactions** when modifying data
+5. **Follow the established naming conventions** from the workspace examples
+6. **Include appropriate logging** with `puts` statements
+7. **Handle object properties safely** with nil checks
+8. **Use the correct table names** for the target application
+9. **Include proper error handling** and validation
+10. **Follow the workspace's coding style** and structure
+11. **When in doubt, create test scripts** to verify API behavior
+
+## Common Operations
+
+### Reading Data
+- Use `net.row_objects('table_name')` for all objects
+- Use `net.row_objects_selection('table_name')` for selected objects
+- Access properties directly: `ro.property_name`
+
+### Writing Data
+- Modify properties: `ro.property_name = new_value`
+- Write individual objects: `ro.write`
+- Use transactions for multiple changes
+- Commit with descriptive messages
+
+### Network Analysis
+- Use `ro.ds_links` and `ro.us_links` for connectivity
+- Implement tracing algorithms using `_seen` flags
+- Handle upstream/downstream relationships properly
+
+## Reference Examples
+When generating code, refer to these specific examples:
+- **River reach operations**: `0001 - Decrease Manning's n roughness in all the river reaches/`
+- **Network tracing**: `0005 - Trace network from selection/`
+- **Data export**: `0002 - Runoff surfaces from selected subcatchments/`
+- **Asset management**: `0001 ODEC Export/` in InfoAsset Manager section
+
+## Testing and Validation
+
+### Automatic Script Testing
+When creating or modifying Ruby scripts, **automatically test them** after creation:
+
+#### For Exchange Scripts:
+- **Detect Exchange scripts** by checking for `WSApplication.open()` or database operations
+- **Test directly** using the appropriate Exchange executable:
+  - **WS Pro**: `& "C:\Program Files\Autodesk\InfoWorks WS Pro 2026\WSProExchange.exe" "path\to\script.rb" /WS`
+  - **ICM**: `& "C:\Program Files\Autodesk\InfoWorks ICM 2026\ICMExchange.exe" "path\to\script.rb" /ICM`
+- **No batch files needed** - run Exchange commands directly via PowerShell
+- **Iterate on errors** - if the script fails, fix the issues and retest automatically
+
+#### For UI Scripts:
+- UI scripts cannot be tested automatically (require user interaction)
+- Provide clear instructions on how to run them from the application
+
+#### Testing Workflow:
+1. Create/modify the Ruby script
+2. Automatically detect if it's an Exchange or UI script
+3. If Exchange: run it immediately using the Exchange executable
+4. Review output for errors
+5. If errors occur: analyze, fix, and retest (up to 3-5 iterations)
+6. Report results to user
+
+#### Example Test Command (WS Pro):
+```powershell
+& "C:\Program Files\Autodesk\InfoWorks WS Pro 2026\WSProExchange.exe" "d:\Copilot Dev\Local-files\Working files\script.rb" /WS
+```
+
+### General Testing Guidelines
+- Always test scripts on small datasets first
+- Use the UI script pattern for interactive testing
+- Include proper logging for debugging
+- Validate data before and after operations
+- Check exit codes and error messages from Exchange runs
+
+## Workflow Execution
+
+When the user prompts you to run a workflow:
+
+1. **Complete the Full Workflow**: Execute scripts using PowerShell, don't just generate them
+2. **Iterate on Failures**: Up to 10 times with small variations in logic
+
+## PowerShell Execution Template
+Use this structure for all generated `.bat` files:
+`Local-files\Exchange\`
