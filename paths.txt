@@ -1,9 +1,8 @@
 ﻿./.cursor
 ./.cursor/rules
 ./.cursor/rules/infoworks-ruby-rules.mdc
+./.cursor/rules/repo-hygiene-and-local-context.mdc
 ./.cursor/rules/ruby-hackathon-cluster-analysis-rules.mdc
-./dir.bat
-./dir.ps1
 ./documentation
 ./documentation/Appendix
 ./documentation/Appendix/add_ons.md
@@ -11091,3 +11090,6 @@
 ./output/WsPro_Release.x64/zlib.so
 ./output/WsPro_Release.x64/zoom.png
 ./paths.txt
+./scripts
+./scripts/dir.bat
+./scripts/dir.ps1

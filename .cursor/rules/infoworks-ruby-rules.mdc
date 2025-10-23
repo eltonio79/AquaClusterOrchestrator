@@ -32,7 +32,7 @@ Reference documentation as the source of truth for methods, tables, and field na
 - **Useful to provide links for**: WSOpenNetwork, WSModelObject, WSApplication, selection operations, result access
 
 ## File management
-Create and edit scripts in the `Local-files\Working files\` path until the user specifies to store it elsewhere.
+Create and edit scripts in the `.\scripts` path until the user specifies to store it elsewhere.
 
 ## Script Type Detection
 
@@ -194,8 +194,7 @@ When creating or modifying Ruby scripts, **automatically test them** after creat
 #### For Exchange Scripts:
 - **Detect Exchange scripts** by checking for `WSApplication.open()` or database operations
 - **Test directly** using the appropriate Exchange executable:
-  - **WS Pro**: `& ".\output\WsPro_Release.x64\WSProExchange.exe" "path\to\script.rb" /WS`
-  - **ICM**: `& ".\output\ICM_Release.x64\ICMExchange.exe" "path\to\script.rb" /ICM`
+`".\output\ICM_Release.x64\ICMExchange.exe" "path\to\script.rb" /ICM`
 - **No batch files needed** - run Exchange commands directly via PowerShell
 - **Iterate on errors** - if the script fails, fix the issues and retest automatically
 
@@ -213,7 +212,7 @@ When creating or modifying Ruby scripts, **automatically test them** after creat
 
 #### Example Test Command (ICM):
 ```powershell
-& ".\output\ICM_Release.x64\ICMExchange.exe" ".\local\scripts\script.rb" /WS
+& ".\output\ICM_Release.x64\ICMExchange.exe" ".\scripts\script.rb" /WS
 ```
 
 ### General Testing Guidelines
@@ -231,5 +230,7 @@ When the user prompts you to run a workflow:
 2. **Iterate on Failures**: Up to 10 times with small variations in logic
 
 ## PowerShell Execution Template
-Use this structure for all generated `.bat` files:
-`.\local\exchange\`
+Use this place for all generated `.bat` / '.ps1' files:
+`.\scripts\`
+Use this place for all other generated files, until paths are not specified explicitely:
+`.\local\

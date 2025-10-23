@@ -1,0 +1,48 @@
+---
+description: "Repo hygiene + local context rules for Cursor Plan (InfoWorks ICM / ICMExchange)"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Repo Hygiene and Local Context Rules
+
+## 1) Keep paths.txt fresh
+- After **any** file/folder add/remove/rename, run:
+```
+./scripts/dir.bat
+```
+- Consumers must resolve paths from:
+```
+./paths.txt
+```
+
+## 2) Local documentation (authoritative)
+- When inferring APIs, **use local docs** first:
+```
+./documentation/
+```
+- Especially for raster export:
+```
+./documentation/Classes/wssimobject.md
+```
+- Do **not** guess method names or keys; mirror the signature from the local docs.
+
+## 3) Local examples (preferred patterns)
+- Reuse patterns from local examples:
+```
+./examples/
+```
+- For raster export usage, consult:
+```
+./examples/ExportRaster2D_IExchange.rb
+```
+
+## 4) Engine
+- Headless ICMExchange execution path:
+```
+./output/Release.x64/ICMExchange.exe
+```
+
+## 5) Git etiquette (before committing generated assets)
+- Ensure `./paths.txt` is updated (`./scripts/dir.bat`).
+- Commit only essential generated artifacts (e.g., minimal rasters/metrics for reproducibility).
