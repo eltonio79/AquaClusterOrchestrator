@@ -1,0 +1,173 @@
+# @name Ruby Hackathon - Cluster Analysis Rules
+# @description Automated 2D Cluster Analysis & Visualization pipeline (Phase A – Raster_2d_Export model)
+# @trigger plan
+# @priority high
+# @version 1.2
+# @author Autodesk Water Team / Marcin Brodowski
+# @scope ./scripts
+# @language Ruby
+
+---
+
+## Role
+You are an expert ICM InfoWorks / ICMExchange Ruby engineer and planner.  
+Your mission: implement a complete automated 2D-results-analysis pipeline in Ruby that detects, clusters,  
+and visualizes areas of change in exported rasters from one fixed model.
+
+---
+
+## Purpose
+Allow customers to visualize and easily identify areas of change in their 2D results,  
+and streamline the process of 2D results analysis using the fixed InfoWorks ICM model  
+`./models/standalone/Raster 2d Export/Raster_2d_Export.icmm`.
+
+---
+
+## Context
+
+**Engine (CLI)**  
+```
+./output/Release.x64/ICMExchange.exe
+```
+
+**Docs (Ruby API)**  
+```
+./documentation/Classes/wssimobject.md
+```
+
+**Example for raster export**  
+```
+./examples/ExportRaster2D_IExchange.rb
+```
+
+**Repository index**  
+`./paths.txt` (refresh by running `./dir.bat` after any change)
+
+**Git integration**  
+Agents may safely use commands such as:  
+`git status | add | commit | diff | log | branch | switch | stash | tag`
+
+---
+
+## Fixed Model and Attributes
+- **Model:** `./models/standalone/Raster 2d Export/Raster_2d_Export.icmm`
+- **Attributes:** `"Depth"` and `"Elevation"`
+- All operations act on raster exports derived from this single model.
+
+---
+
+## Phase A Workflow
+
+1) **Run baseline simulation (in ICM)**  
+   Manual or existing baseline; pipeline consumes existing results.
+
+2) **Export baseline rasters**  
+   Use `SimObject#raster_2d_export` → produce  
+   `Depth.tif` and `Elevation.tif` under `./runs/exports/baseline/`.
+
+3) **Generate clusters**  
+   From the two rasters:  
+   - Normalize values (z-score / percentile).  
+   - Compute Δ Depth + Δ Elevation magnitude.  
+   - Threshold (`mean + k×std` or `p95`).  
+   - Connected-components (8-neighbour) → cluster polygons.  
+   - Compute metrics (area, centroid, meanΔ, maxΔ).
+
+4) **Write cluster layers**  
+   Create:  
+   - `clusters_layer.rb` containing a Ruby array of polygons (`id`, `area`, `centroid`, `polygon`).  
+   - Optionally `clusters.shp` or `clusters.geojson` for GIS.
+
+5) **Visualize and animate**  
+   - Overlay clusters on base rasters using MiniMagick/RMagick.  
+   - Crop to changes if cluster area is small.  
+   - Save `clusters_overlay_###.jpg` in `./runs/viz/`.  
+   - Combine frames into `animation.gif` or `.mp4`.
+
+6) **Generate report**  
+   - Create `clusters.csv` (summary metrics).  
+   - Produce `REPORT.md` (thumbnails + links to GIF).  
+   - Append summary JSON for later use.
+
+---
+
+## Artifacts Structure
+```
+./runs/
+ ├─ exports/baseline/{Depth,Elevation}.tif
+ ├─ clusters/{clusters_layer.rb,clusters.shp}
+ ├─ viz/{clusters_overlay_001.jpg,animation.gif}
+ ├─ metrics/clusters.csv
+ └─ REPORT.md
+```
+
+---
+
+## Implementation Guidelines
+- Use **exact API signatures** from `wssimobject.md` (do not guess).  
+- Employ `Numo::NArray` or GDAL for raster math.  
+- Use MiniMagick for drawing and GIF creation.  
+- Keep EPSG and resolution consistent.  
+- Resolve paths via `paths.txt` and refresh with `dir.bat`.  
+- Ensure the entire process runs **headless via ICMExchange**.
+
+---
+
+## Expected Ruby Scripts (under ./scripts)
+| File | Responsibility |
+|------|----------------|
+| pipeline.rb | Main orchestrator (export → cluster → layer → viz → report). |
+| exporter.rb | Handles `raster_2d_export` for Depth/Elevation. |
+| clusterer.rb | Performs Δ computation and polygon clustering. |
+| layer_writer.rb | Writes Ruby layer file + optional Shapefile/GeoJSON. |
+| visualizer.rb | Draws overlays and creates JPG/GIF animations. |
+| reporter.rb | Generates CSV + markdown summary. |
+
+---
+
+## CLI Example
+```bash
+.\output\Release.x64\IExchange.exe -ruby .\scripts\pipeline.rb -- ^
+  --model-path ".\models\standalone\Raster 2d Export\Raster_2d_Export.icmm" ^
+  --attributes Depth,Elevation ^
+  --change-threshold p95 ^
+  --min-area 200 ^
+  --export-only false
+```
+
+---
+
+## Acceptance Criteria
+- Works on the fixed model; no model generation.  
+- Exports Depth and Elevation rasters.  
+- Detects and clusters changes.  
+- Generates a Ruby layer file (`clusters_layer.rb`).  
+- Produces JPG overlays and GIF animation.  
+- Outputs `REPORT.md` and `clusters.csv`.  
+- Resolves all paths via `paths.txt` (refreshed using `dir.bat`).  
+- Executes fully headless under ICMExchange.  
+
+---
+
+## System Dependencies
+- Ruby ≥ 2.7  
+- MiniMagick or RMagick  
+- Numo::NArray or GDAL bindings  
+- ICMExchange.exe runtime access  
+
+---
+
+## Style and Quality
+- Small, composable methods; comments should explain *why*, not just *what*.  
+- Fast defaults (coarse mesh, short timesteps).  
+- Log each phase under `./runs/logs/`.  
+
+---
+
+## Optional Post-Processing Enhancements
+- GeoJSON export for QGIS integration.  
+- Marimo/Jupyter report preview.  
+- Adjustable thresholds (`--change-threshold pXX` or absolute).  
+- Cost-benefit analysis integration (future Phase B).
+
+---
