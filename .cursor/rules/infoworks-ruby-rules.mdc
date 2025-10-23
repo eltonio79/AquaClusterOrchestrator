@@ -8,14 +8,12 @@ alwaysApply: true
 
 ## Context and Reference
 When generating Ruby code for hydraulic modeling applications, always reference and learn from the extensive examples in this workspace:
-- **InfoWorks ICM scripts**: `Open-Source-Support/01 InfoWorks ICM/01 Ruby/01 InfoWorks/`
-- **InfoAsset Manager scripts**: `Open-Source-Support/02 InfoAsset Manager/01 Ruby/`
-- **InfoWorks WS Pro scripts**: `Open-Source-Support/04 InfoWorks WS Pro/01 Ruby/`
-- **ModelBuilder-main**: `ModelBuilder-main/wombat/`
+- **InfoWorks ICM scripts**: `.\examples\01 InfoWorks\`
+- **InfoWorks ICM SWMM scripts**: `.\examples\02 SWMM\`
 
 ## Documentation and Method Validation
 Reference documentation as the source of truth for methods, tables, and field names. 
-- `documentation/`
+- `.\documentation\`
 **CRITICAL**: Always validate methods and classes against actual documentation and examples. Never invent or assume methods exist.
 
 
@@ -196,8 +194,8 @@ When creating or modifying Ruby scripts, **automatically test them** after creat
 #### For Exchange Scripts:
 - **Detect Exchange scripts** by checking for `WSApplication.open()` or database operations
 - **Test directly** using the appropriate Exchange executable:
-  - **WS Pro**: `& "C:\Program Files\Autodesk\InfoWorks WS Pro 2026\WSProExchange.exe" "path\to\script.rb" /WS`
-  - **ICM**: `& "C:\Program Files\Autodesk\InfoWorks ICM 2026\ICMExchange.exe" "path\to\script.rb" /ICM`
+  - **WS Pro**: `& ".\output\WsPro_Release.x64\WSProExchange.exe" "path\to\script.rb" /WS`
+  - **ICM**: `& ".\output\ICM_Release.x64\ICMExchange.exe" "path\to\script.rb" /ICM`
 - **No batch files needed** - run Exchange commands directly via PowerShell
 - **Iterate on errors** - if the script fails, fix the issues and retest automatically
 
@@ -213,9 +211,9 @@ When creating or modifying Ruby scripts, **automatically test them** after creat
 5. If errors occur: analyze, fix, and retest (up to 3-5 iterations)
 6. Report results to user
 
-#### Example Test Command (WS Pro):
+#### Example Test Command (ICM):
 ```powershell
-& "C:\Program Files\Autodesk\InfoWorks WS Pro 2026\WSProExchange.exe" "d:\Copilot Dev\Local-files\Working files\script.rb" /WS
+& ".\output\ICM_Release.x64\ICMExchange.exe" ".\local\scripts\script.rb" /WS
 ```
 
 ### General Testing Guidelines
@@ -234,4 +232,4 @@ When the user prompts you to run a workflow:
 
 ## PowerShell Execution Template
 Use this structure for all generated `.bat` files:
-`Local-files\Exchange\`
+`.\local\exchange\`
