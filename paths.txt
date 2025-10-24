@@ -1,8 +1,12 @@
 ﻿./.cursor
+./.cursor/mcp.json
 ./.cursor/rules
-./.cursor/rules/infoworks-ruby-rules.mdc
-./.cursor/rules/repo-hygiene-and-local-context.mdc
-./.cursor/rules/ruby-hackathon-cluster-analysis-rules.mdc
+./.cursor/rules/00-repo-hygiene-and-local-context.mdc
+./.cursor/rules/10-ruby-hackathon-cluster-analysis-rules.mdc
+./.cursor/rules/20-infoworks-ruby-rules.mdc
+./data
+./data/input
+./data/output
 ./documentation
 ./documentation/Appendix
 ./documentation/Appendix/add_ons.md
@@ -2021,6 +2025,65 @@
 ./models/standalone/Large 2D/Large_2D_Network.icmm
 ./models/standalone/Large 2D/Large_2D_Network.icmm.dat
 ./models/standalone/Medium 2D
+./models/standalone/Medium 2D - Copy
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/Extras
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GGM1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Index.cfg
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_1.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_2.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_3.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_1.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_2.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_3.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_1.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_2.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_3.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_1.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_2.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_3.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile16_0_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_0_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_0_1.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_1_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_1_1.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile4_0_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile8_0_0.til
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/version.dat
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/MODG1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/NNET1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/NNET1BlobPreview.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/1.ndjson.gz
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/2.ndjson.gz
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/3.ndjson.gz
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/4.ndjson.gz
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/5.ndjson.gz
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/6.ndjson.gz
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/create.log
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.wdb
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN1Blob.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN2.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN2Blob.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RootObjects.Dat
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RootPrefs.Dat
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RUN1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RUN2.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM2.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM3.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/THM1.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/THM1Blob.DAT
+./models/standalone/Medium 2D - Copy/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/WKSP_brodowm.DAT
+./models/standalone/Medium 2D - Copy/Ruby_Hackathon_Medium_2D_Model.icmm
+./models/standalone/Medium 2D - Copy/Ruby_Hackathon_Medium_2D_Model.icmm.dat
 ./models/standalone/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B
 ./models/standalone/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/Extras
 ./models/standalone/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GGM1.DAT
@@ -11149,6 +11212,25 @@
 ./output/WsPro_Release.x64/zlib.so
 ./output/WsPro_Release.x64/zoom.png
 ./paths.txt
+./README.md
 ./scripts
+./scripts/clusterize_settings.json
+./scripts/depth_change_analysis.json
+./scripts/depth_change_analysis.rul
+./scripts/depth_worst_increase.json
+./scripts/depth_worst_increase.rul
 ./scripts/dir.bat
 ./scripts/dir.ps1
+./scripts/elements_depth_delta_gt_0_005.json
+./scripts/elements_depth_delta_gt_0_005.rul
+./scripts/hazard_about_one.json
+./scripts/hazard_about_one.rul
+./scripts/show_high_depths.json
+./scripts/show_high_depths.rul
+./scripts/volume_change_analysis.json
+./scripts/volume_change_analysis.rul
+./tools
+./tools/mcp_server.py
+./tools/templates
+./tools/templates/optim_config.json
+./tools/templates/rul_template.rul
