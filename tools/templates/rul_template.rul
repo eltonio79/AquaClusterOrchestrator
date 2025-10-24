@@ -1,0 +1,8 @@
+; Auto-generated RUL (Cursor + MCP)
+; region={{REGION}}
+; cluster_count={{CLUSTERS}}
+; objective={{OBJECTIVE}}
+; notes={{NOTES}}
+
+[SELECTION]
+; ...wstawiasz tu swoją kanoniczną sekcję...

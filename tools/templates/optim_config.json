@@ -1,0 +1,11 @@
+{
+  "objective": "min_flood_depth",
+  "max_iterations": 50,
+  "cluster_method": "kmeans",
+  "cluster_count": 8,
+  "region": "AOI-1",
+  "constraints": {
+    "max_cost": 250000,
+    "max_runtime_min": 30
+  }
+}

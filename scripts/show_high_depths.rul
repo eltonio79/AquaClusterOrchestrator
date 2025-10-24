@@ -1,0 +1,3 @@
+# MCP-enabled rule
+# Agents may collaborate via MCP to interpret/extend this rule.
+Show me all areas with a flood depth > 0.5m

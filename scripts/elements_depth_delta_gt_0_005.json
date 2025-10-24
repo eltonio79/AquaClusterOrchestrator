@@ -1,0 +1,56 @@
+{
+  "compare": {
+    "baseline_id": 1,
+    "candidate_id": 2
+  },
+  "attributes": [
+    "ANGLE2D",
+    "DEPTH2D",
+    "SPEED2D",
+    "CUMINF2D",
+    "GASMD2D",
+    "GASFLAG2D",
+    "GAMCUZ2D",
+    "GATDUZ2D"
+  ],
+  "clustering": {
+    "method": "kmeans",
+    "k": 6,
+    "max_iter": 300,
+    "init": "k-means++",
+    "random_seed": 42
+  },
+  "thresholds": {
+    "min_cluster_area": 150.0
+  },
+  "visualization": {
+    "palette": "Spectral",
+    "use_gradient": true,
+    "draw_mesh": false,
+    "center_only": true
+  },
+  "outputs": {
+    "make_animation": true,
+    "export_geojson": true,
+    "export_shapefile": false
+  },
+  "mcp": {
+    "use_mcp": true,
+    "server": "duckdb_mcp",
+    "shared_context": "./runs/context/",
+    "agents": [
+      "ClusterOptimizer",
+      "ResultsInterpreter",
+      "RuleExpander",
+      "Visualizer"
+    ],
+    "allow_agent_communication": true
+  },
+  "features": [
+    "DEPTH2D"
+  ],
+  "derive": {
+    "delta": "DEPTH2D_2 - DEPTH2D_1"
+  },
+  "filter": "delta > 0.005"
+}

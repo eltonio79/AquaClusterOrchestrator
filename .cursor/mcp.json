@@ -1,0 +1,15 @@
+{
+  "clients": {
+    "icm-tools": {
+      "command": "python",
+      "args": ["tools\\mcp_server.py"],
+      "transport": "stdio",
+      "restart": "onExit",
+      "env": {
+        "ICM_OPT_BASE": "${workspaceFolder}",
+        "ICM_TEMPLATES": "${workspaceFolder}\\tools\\templates",
+        "ICM_OUTPUT_DIR": "${workspaceFolder}\\data\\output"
+      }
+    }
+  }
+}
