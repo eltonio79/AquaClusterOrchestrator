@@ -18,6 +18,8 @@ def write_json_stdout(obj):
     sys.stdout.write(json.dumps(obj) + "\n")
     sys.stdout.flush()
 
+# ------------------- TOOLS IMPLEMENTATION -------------------
+
 def create_file(params):
     path = params.get("path")
     content = params.get("content", "")
@@ -47,7 +49,7 @@ def write_rul(params):
 def generate_clusters(params):
     out_path = os.path.join(OUT, f"clusters_{uuid.uuid4().hex}.json")
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump({"clusters": [{"id":1,"cells":[1,2,3]}], "params": params}, f, indent=2)
+        json.dump({"clusters": [{"id": 1, "cells": [1, 2, 3]}], "params": params}, f, indent=2)
     return ok({"path": out_path})
 
 def select_areas(params):
@@ -65,7 +67,12 @@ def run_optimizer(params):
     with open(cfg, "r", encoding="utf-8") as f:
         config = json.load(f)
     out_path = os.path.join(OUT, f"optimizer_result_{uuid.uuid4().hex}.json")
-    result = {"status":"ok","objective":config.get("objective","n/a"),"config":config,"result":{"score":0.87}}
+    result = {
+        "status": "ok",
+        "objective": config.get("objective", "n/a"),
+        "config": config,
+        "result": {"score": 0.87}
+    }
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
     return ok({"path": out_path})
@@ -78,17 +85,88 @@ TOOLS = {
     "run_optimizer": run_optimizer,
 }
 
+TOOLS_META = {
+    "create_file": {
+        "name": "create_file",
+        "description": "Create a text file relative to BASE with given content.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "path": {"type": "string", "description": "Relative path to create"},
+                "content": {"type": "string", "description": "File content"}
+            },
+            "required": ["path"]
+        }
+    },
+    "write_rul": {
+        "name": "write_rul",
+        "description": "Render rul_template.rul with variables and write to OUT as .rul.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string", "description": "Output file name, .rul"},
+                "variables": {"type": "object", "additionalProperties": True}
+            }
+        }
+    },
+    "generate_clusters": {
+        "name": "generate_clusters",
+        "description": "Generate dummy clusters JSON to OUT (demo).",
+        "inputSchema": {"type": "object"}
+    },
+    "select_areas": {
+        "name": "select_areas",
+        "description": "Persist selection params to OUT (demo).",
+        "inputSchema": {"type": "object"}
+    },
+    "run_optimizer": {
+        "name": "run_optimizer",
+        "description": "Run mock optimizer using a JSON config file.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "config_path": {"type": "string", "description": "Path to config JSON"}
+            }
+        }
+    }
+}
+
+def list_tools_payload():
+    return {"tools": [TOOLS_META[name] for name in TOOLS.keys()]}
+
+# ------------------- JSON-RPC HANDLER -------------------
+
 def handle(req):
     try:
         method = req.get("method")
-        if method in ("mcp/initialize", "mcp/listTools"):
-            return ok({"tools": list(TOOLS.keys())})
-        if method == "mcp/callTool":
-            name = req.get("params",{}).get("name")
-            params = req.get("params",{}).get("arguments",{}) or {}
+        params = req.get("params", {}) or {}
+
+        # różne inicjalizacje używane przez klientów MCP
+        if method in ("server/initialize", "initialize", "mcp/initialize"):
+            return ok({
+                "protocolVersion": "2024-11-05",
+                "capabilities": {"tools": {}},
+                "serverInfo": {"name": "icm-tools", "version": "0.1.1"}
+            })
+
+        # list tools – obsługujemy stare i nowe nazwy
+        if method in ("tools/list", "mcp/listTools"):
+            return ok(list_tools_payload())
+
+        # call tool – stare i nowe nazwy
+        if method in ("tools/call", "mcp/callTool"):
+            name = params.get("name")
+            arguments = params.get("arguments", {}) or {}
             if name not in TOOLS:
                 return err(f"Unknown tool: {name}")
-            return TOOLS[name](params)
+            return TOOLS[name](arguments)
+
+        # puste listy dla zasobów/prompts/roots żeby UI się nie wywalało
+        if method in ("resources/list", "prompts/list", "roots/list"):
+            # zwracamy pustą strukturę zgodną z nazwą przestrzeni
+            key = method.split('/')[0]
+            return ok({key: []})
+
         return err(f"Unknown method: {method}")
     except Exception as e:
         return err(f"{e}\n{traceback.format_exc()}")
@@ -98,7 +176,7 @@ def main():
         req = read_json_stdin()
         if req is None:
             break
-        resp = {"id": req.get("id"), "jsonrpc":"2.0"}
+        resp = {"id": req.get("id"), "jsonrpc": "2.0"}
         out = handle(req)
         if out.get("ok"):
             resp["result"] = out["result"]
