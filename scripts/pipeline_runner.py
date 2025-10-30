@@ -28,10 +28,12 @@ class PipelineRunner:
     def __init__(self, 
                  scripts_dir: str = "scripts",
                  data_dir: str = "data/output",
-                 icm_exchange_path: str = "output/ICM_Release.x64/ICMExchange.exe"):
+                 icm_exchange_path: str = "output/ICM_Release.x64/ICMExchange.exe",
+                 run_simulations: bool = False):
         self.scripts_dir = scripts_dir
         self.data_dir = data_dir
         self.icm_exchange_path = icm_exchange_path
+        self.run_simulations = run_simulations
         
         # Initialize components
         self.rule_parser = RuleParser(scripts_dir)
@@ -98,28 +100,27 @@ class PipelineRunner:
         self._md_write(f"- Start: {datetime.now().isoformat()}")
         self._md_write(f"- Data dir: `{self.data_dir}`")
         self._md_write(f"- Scripts dir: `{self.scripts_dir}`")
+        self._md_write(f"- Run simulations: {self.run_simulations}")
         self._md_write("")
     
     def run_ruby_export(self, sim_id: int, attributes: List[str], output_dir: str) -> bool:
         """Run Ruby script to export rasters via ICMExchange."""
         try:
-            # Prepare command
+            # Prepare command with absolute script path and default cwd
+            script_path = os.path.abspath(os.path.join(self.scripts_dir, "export_rasters.rb"))
             cmd = [
                 self.icm_exchange_path,
-                os.path.join(self.scripts_dir, "export_rasters.rb"),
+                script_path,
                 str(sim_id),
                 output_dir,
                 ','.join(attributes)
             ]
-            
             self.logger.info(f"Running Ruby export: {' '.join(cmd)}")
             
-            # Run command
             result = subprocess.run(
                 cmd,
                 capture_output=True,
-                text=True,
-                cwd=os.path.dirname(os.path.abspath(self.scripts_dir))
+                text=True
             )
             
             if result.returncode == 0:
@@ -134,6 +135,96 @@ class PipelineRunner:
         except Exception as e:
             self.logger.error(f"Error running Ruby export: {e}")
             return False
+    
+    def run_ruby_script(self, script_name: str, *args) -> bool:
+        """Run a Ruby script via ICMExchange."""
+        try:
+            script_path = os.path.abspath(os.path.join(self.scripts_dir, script_name))
+            cmd = [self.icm_exchange_path, script_path] + list(args)
+            self.logger.info(f"Running Ruby script: {' '.join(cmd)}")
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode == 0:
+                self.logger.info("Ruby script completed successfully")
+                if result.stdout.strip():
+                    self.logger.info(f"Output: {result.stdout}")
+                return True
+            else:
+                self.logger.error(f"Ruby script failed with return code {result.returncode}")
+                self.logger.error(f"Error output: {result.stderr}")
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"Error running Ruby script: {e}")
+            return False
+    
+    def maybe_setup_cluster_network(self) -> bool:
+        """Copy source network to Clusters group if needed and not already exists."""
+        if not self.run_simulations:
+            return True
+        
+        self.logger.info("Setting up cluster network copy...")
+        self._md_write("\n### Cluster Network Setup")
+        
+        # Load config for group/network names
+        try:
+            cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+            with open(cfg_path, 'r', encoding='utf-8-sig') as f:
+                cfg = json.load(f)
+                src_group = cfg.get('source_group_name', '2D Demo - 2d rain')
+                src_net = cfg.get('source_network_name', '5k')
+                dest_group = cfg.get('clusters_group_name', 'Clusters')
+        except Exception as e:
+            self.logger.error(f"Could not load config: {e}")
+            return False
+        
+        # Copy network to Clusters group
+        success = self.run_ruby_script(
+            'copy_network_to_group_by_name.rb',
+            src_group,
+            src_net,
+            dest_group
+        )
+        
+        if success:
+            self._md_write(f"- Copied network '{src_group}>{src_net}' to '{dest_group}'")
+        else:
+            self._md_write("- Network copy failed or already exists")
+        
+        return success
+    
+    def maybe_run_simulations(self) -> Optional[int]:
+        """Create/copy and launch simulation runs if enabled. Returns Run ID or None."""
+        if not self.run_simulations:
+            self.logger.info("Simulation runs disabled, skipping")
+            return None
+        
+        self.logger.info("Creating and launching simulation runs...")
+        self._md_write("\n### Simulation Runs")
+        
+        # Load config
+        try:
+            cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+            with open(cfg_path, 'r', encoding='utf-8-sig') as f:
+                cfg = json.load(f)
+                src_group = cfg.get('source_group_name', '2D Demo - 2d rain')
+                dest_group = cfg.get('clusters_group_name', 'Clusters')
+        except Exception as e:
+            self.logger.error(f"Could not load config: {e}")
+            return None
+        
+        # For now, we need the source Run name - this would come from user input or config
+        # For initial implementation, we'll skip this step and log that manual input is needed
+        self.logger.warning("Automatic simulation runs require source Run name")
+        self._md_write("- Automatic simulation runs not yet fully implemented")
+        self._md_write("- Requires manual setup: create Run in Clusters group via UI or Ruby script")
+        
+        return None
     
     def process_rule(self, rule_config: RuleConfig, export_rasters: bool = True) -> Optional[Dict[str, Any]]:
         """Process a single rule configuration."""
@@ -217,6 +308,11 @@ class PipelineRunner:
         self.run_manifest['start_time'] = datetime.now().isoformat()
         
         try:
+            # Setup cluster network if simulations are enabled
+            if self.run_simulations:
+                if not self.maybe_setup_cluster_network():
+                    self.logger.warning("Failed to setup cluster network, continuing anyway")
+            
             # Parse all rules
             all_rules = self.rule_parser.parse_all_rules()
             
@@ -241,6 +337,10 @@ class PipelineRunner:
                 result = self.process_rule(rule_config, export_rasters)
                 if result:
                     successful_rules += 1
+                
+                # If simulations are enabled, attempt to run them (currently placeholder)
+                if self.run_simulations and result:
+                    self.maybe_run_simulations()
             
             # Generate summary report
             if self.results:
@@ -308,14 +408,29 @@ def main():
     parser.add_argument('--data-dir', default='data/output', help='Data output directory')
     parser.add_argument('--icm-exchange', default='output/ICM_Release.x64/ICMExchange.exe', 
                        help='Path to ICMExchange executable')
+    parser.add_argument('--run-simulations', action='store_true',
+                       help='Enable automatic simulation runs (default: disabled)')
     
     args = parser.parse_args()
+    
+    # Load config if available to override defaults
+    run_sims = args.run_simulations
+    try:
+        cfg_path = os.path.join(args.scripts_dir, 'pipeline_config.json')
+        if os.path.exists(cfg_path):
+            with open(cfg_path, 'r', encoding='utf-8-sig') as f:
+                cfg = json.load(f)
+                if not args.run_simulations:
+                    run_sims = cfg.get('run_simulations', False)
+    except Exception as e:
+        logging.warning(f"Could not load config: {e}")
     
     # Initialize pipeline runner
     runner = PipelineRunner(
         scripts_dir=args.scripts_dir,
         data_dir=args.data_dir,
-        icm_exchange_path=args.icm_exchange
+        icm_exchange_path=args.icm_exchange,
+        run_simulations=run_sims
     )
     
     try:

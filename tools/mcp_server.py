@@ -12,7 +12,13 @@ def read_json_stdin():
     buf = sys.stdin.readline()
     if not buf:
         return None
-    return json.loads(buf)
+    try:
+        return json.loads(buf)
+    except Exception as e:
+        # Never write logs to stdout; stderr only
+        sys.stderr.write(f"mcp_server: invalid JSON on stdin: {e}\n")
+        sys.stderr.flush()
+        return None
 
 def write_json_stdout(obj):
     sys.stdout.write(json.dumps(obj) + "\n")
@@ -176,7 +182,16 @@ def main():
         req = read_json_stdin()
         if req is None:
             break
-        resp = {"id": req.get("id"), "jsonrpc": "2.0"}
+        req_id = req.get("id", None)
+        # Do not respond to notifications (no id) per JSON-RPC
+        if req_id is None:
+            try:
+                handle(req)  # allow side effects if any, but no response
+            except Exception as e:
+                sys.stderr.write(f"mcp_server: error handling notification: {e}\n")
+                sys.stderr.flush()
+            continue
+        resp = {"id": req_id, "jsonrpc": "2.0"}
         out = handle(req)
         if out.get("ok"):
             resp["result"] = out["result"]

@@ -4,22 +4,31 @@
 require 'json'
 
 # Parse command line arguments
-if ARGV.length < 2
+# Some Exchange environments prepend the script path in ARGV[0]. Detect and shift if needed.
+args = ARGV.dup
+if args.length >= 1 && (args[0] !~ /^\d+$/)
+  # First arg is not a number → likely the script path; drop it
+  args.shift
+end
+
+if args.length < 2
   puts "Usage: export_rasters.rb <simulation_id> <output_directory> [attributes_csv] [model_path]"
   puts "Example: export_rasters.rb 1 data/output/rasters/sim_1 'DEPTH2D,SPEED2D' 'models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm'"
   exit 1
 end
 
-simulation_id = ARGV[0].to_i
-output_directory = ARGV[1]
-attributes = ARGV[2] ? ARGV[2].split(',') : ['DEPTH2D', 'SPEED2D', 'ANGLE2D', 'CUMINF2D', 'GASMD2D', 'GASFLAG2D', 'GAMCUZ2D', 'GATDUZ2D']
-model_path_arg = ARGV[3]
+simulation_id = args[0].to_i
+output_directory = args[1]
+attributes = args[2] ? args[2].split(',') : ['DEPTH2D', 'SPEED2D', 'ANGLE2D', 'CUMINF2D', 'GASMD2D', 'GASFLAG2D', 'GAMCUZ2D', 'GATDUZ2D']
+model_path_arg = args[3]
 
 def read_config_model_path
   begin
     cfg_path = File.join('scripts', 'pipeline_config.json')
     if File.exist?(cfg_path)
-      cfg = JSON.parse(File.read(cfg_path))
+      raw = File.open(cfg_path, 'rb') { |f| f.read }
+      raw = raw.sub(/^\xEF\xBB\xBF/, '')
+      cfg = JSON.parse(raw.force_encoding('UTF-8'))
       return cfg['model_path'] if cfg && cfg['model_path'] && !cfg['model_path'].empty?
     end
   rescue => e
@@ -35,7 +44,6 @@ puts "Attributes: #{attributes.join(', ')}"
 begin
   model_path = model_path_arg || read_config_model_path || "models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm"
   database = WSApplication.open(model_path)
-  puts "Database opened: #{database.name}"
   
   model = database.model_object_from_type_and_id('Sim', simulation_id)
   modelType = model.class.to_s

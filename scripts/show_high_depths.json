@@ -49,5 +49,5 @@
   "features": [
     "DEPTH2D"
   ],
-  "filter": "DEPTH2D > 0.5"
+  "filter": "DEPTH2D > 0.05"
 }

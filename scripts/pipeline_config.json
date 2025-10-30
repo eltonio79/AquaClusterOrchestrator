@@ -1,0 +1,9 @@
+﻿{
+  "model_path": "C:\\Users\\brodowm\\OneDrive - Autodesk\\Documents\\InfoWorks ICM\\Standalone Databases\\Raster 2d Export\\Raster_2d_Export.icmm",
+  "data_dir": "data/output",
+  "icm_exchange": "output/ICM_Release.x64/ICMExchange.exe",
+  "run_simulations": false,
+  "clusters_group_name": "Clusters",
+  "source_group_name": "2D Demo - 2d rain",
+  "source_network_name": "5k"
+}
