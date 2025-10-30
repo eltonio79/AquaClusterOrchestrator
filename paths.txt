@@ -4,6 +4,7 @@
 ./.cursor/rules/00-repo-hygiene-and-local-context.mdc
 ./.cursor/rules/10-ruby-hackathon-cluster-analysis-rules.mdc
 ./.cursor/rules/20-infoworks-ruby-rules.mdc
+./CLUSTER_ANALYSIS_PIPELINE.md
 ./data
 ./data/input
 ./data/output
@@ -11220,6 +11221,7 @@
 ./paths.txt
 ./README.md
 ./requirements.txt
+./Ruby_Hackathon_2025.code-workspace
 ./scripts
 ./scripts/__pycache__
 ./scripts/__pycache__/cluster_processor.cpython-313.pyc
@@ -11228,6 +11230,8 @@
 ./scripts/clusterize_settings.json
 ./scripts/commit_iteration.ps1
 ./scripts/compare_runs.py
+./scripts/compare_simulations_ui.rb
+./scripts/demo_pipeline.py
 ./scripts/depth_change_analysis.json
 ./scripts/depth_change_analysis.rul
 ./scripts/depth_worst_increase.json
@@ -11236,6 +11240,7 @@
 ./scripts/dir.ps1
 ./scripts/elements_depth_delta_gt_0_005.json
 ./scripts/elements_depth_delta_gt_0_005.rul
+./scripts/export_current_sim_ui.rb
 ./scripts/export_rasters.rb
 ./scripts/exporter.py
 ./scripts/hazard_about_one.json
@@ -11243,8 +11248,12 @@
 ./scripts/list_simulations.rb
 ./scripts/optimizer.py
 ./scripts/pipeline_runner.py
+./scripts/processed_results_tracker.py
 ./scripts/rule_parser.py
 ./scripts/run_pipeline.ps1
+./scripts/run_pipeline_background.ps1
+./scripts/run_pipeline_interactive.ps1
+./scripts/setup_pipeline.ps1
 ./scripts/show_high_depths.json
 ./scripts/show_high_depths.rul
 ./scripts/test_pipeline.py
@@ -11252,6 +11261,8 @@
 ./scripts/volume_change_analysis.json
 ./scripts/volume_change_analysis.rul
 ./tools
+./tools/data
+./tools/data/output
 ./tools/mcp_server.py
 ./tools/templates
 ./tools/templates/optim_config.json

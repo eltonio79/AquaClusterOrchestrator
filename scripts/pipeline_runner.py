@@ -41,6 +41,12 @@ class PipelineRunner:
         
         # Set up logging
         self.logger = self._setup_logging()
+
+        # Markdown log setup
+        logs_dir = os.path.join(self.data_dir, "logs")
+        os.makedirs(logs_dir, exist_ok=True)
+        self.md_log_path = os.path.join(logs_dir, f"pipeline_run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md")
+        self._md_init()
         
         # Results tracking
         self.results = []
@@ -78,6 +84,21 @@ class PipelineRunner:
         logger.addHandler(console_handler)
         
         return logger
+
+    def _md_write(self, text: str) -> None:
+        try:
+            with open(self.md_log_path, 'a', encoding='utf-8') as f:
+                f.write(text + "\n")
+        except Exception as e:
+            self.logger.debug(f"Failed to write MD log: {e}")
+
+    def _md_init(self) -> None:
+        self._md_write(f"# Cluster Analysis Pipeline Run")
+        self._md_write("")
+        self._md_write(f"- Start: {datetime.now().isoformat()}")
+        self._md_write(f"- Data dir: `{self.data_dir}`")
+        self._md_write(f"- Scripts dir: `{self.scripts_dir}`")
+        self._md_write("")
     
     def run_ruby_export(self, sim_id: int, attributes: List[str], output_dir: str) -> bool:
         """Run Ruby script to export rasters via ICMExchange."""
@@ -117,6 +138,7 @@ class PipelineRunner:
     def process_rule(self, rule_config: RuleConfig, export_rasters: bool = True) -> Optional[Dict[str, Any]]:
         """Process a single rule configuration."""
         self.logger.info(f"Processing rule: {rule_config.name}")
+        self._md_write(f"\n## Rule: `{rule_config.name}` ({rule_config.analysis_type.value})")
         
         try:
             # Export rasters if needed
@@ -135,11 +157,15 @@ class PipelineRunner:
                     success = self.run_ruby_export(sim_id, rule_config.attributes, output_dir)
                     if not success:
                         self.logger.error(f"Failed to export rasters for simulation {sim_id}")
+                        self._md_write(f"- Export failed for simulation {sim_id}")
                         return None
+                    else:
+                        self._md_write(f"- Exported rasters for simulation {sim_id} → `{output_dir}`")
             
             # Process the rule
             result = self.cluster_processor.process_rule(rule_config)
             self.results.append(result)
+            self._md_write(f"- Clusters: {len(result.clusters)}")
             
             # Create visualizations
             viz_config = VisualizationConfig()
@@ -149,9 +175,17 @@ class PipelineRunner:
                 'difference': self.visualizer.create_difference_map(result, viz_config),
                 'animation': self.visualizer.create_animation(result, viz_config)
             }
+            self._md_write("- Visualizations:")
+            for k, v in viz_paths.items():
+                if v:
+                    self._md_write(f"  - {k}: `{v}`")
             
             # Export results
             exported_files = self.exporter.export_all(result, viz_paths)
+            if exported_files:
+                self._md_write("- Exports:")
+                for p in exported_files:
+                    self._md_write(f"  - `{p}`")
             
             # Track results
             rule_result = {
@@ -167,12 +201,14 @@ class PipelineRunner:
             self.run_manifest['rules_processed'].append(rule_result)
             
             self.logger.info(f"Successfully processed rule: {rule_config.name}")
+            self._md_write("- Status: success")
             return rule_result
             
         except Exception as e:
             error_msg = f"Error processing rule {rule_config.name}: {e}"
             self.logger.error(error_msg)
             self.run_manifest['errors'].append(error_msg)
+            self._md_write(f"- Status: failed\n- Error: {e}")
             return None
     
     def run_pipeline(self, rule_names: Optional[List[str]] = None, export_rasters: bool = True) -> Dict[str, Any]:
@@ -210,6 +246,7 @@ class PipelineRunner:
             if self.results:
                 summary_report_path = self.exporter.create_summary_report(self.results)
                 self.run_manifest['summary_report'] = summary_report_path
+                self._md_write(f"\n### Summary Report\n- `{summary_report_path}`")
             
             # Finalize manifest
             self.run_manifest['end_time'] = datetime.now().isoformat()
@@ -227,6 +264,16 @@ class PipelineRunner:
             
             self.logger.info(f"Pipeline completed successfully. Processed {successful_rules}/{len(rules_to_process)} rules")
             self.logger.info(f"Run manifest saved: {manifest_path}")
+            self._md_write("\n---")
+            self._md_write("### Run Statistics")
+            stats = self.run_manifest['statistics']
+            self._md_write(f"- Rules: {stats.get('successful_rules',0)}/{stats.get('total_rules',0)}")
+            self._md_write(f"- Total clusters: {stats.get('total_clusters',0)}")
+            if self.run_manifest['errors']:
+                self._md_write("- Errors:")
+                for err in self.run_manifest['errors']:
+                    self._md_write(f"  - {err}")
+            self._md_write(f"\nLog file: `{self.md_log_path}`")
             
             return self.run_manifest
             

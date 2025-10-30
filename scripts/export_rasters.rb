@@ -5,21 +5,36 @@ require 'json'
 
 # Parse command line arguments
 if ARGV.length < 2
-  puts "Usage: ruby export_rasters.rb <simulation_id> <output_directory> [attributes]"
-  puts "Example: ruby export_rasters.rb 1 data/output/rasters/sim_1 'DEPTH2D,SPEED2D'"
+  puts "Usage: export_rasters.rb <simulation_id> <output_directory> [attributes_csv] [model_path]"
+  puts "Example: export_rasters.rb 1 data/output/rasters/sim_1 'DEPTH2D,SPEED2D' 'models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm'"
   exit 1
 end
 
 simulation_id = ARGV[0].to_i
 output_directory = ARGV[1]
 attributes = ARGV[2] ? ARGV[2].split(',') : ['DEPTH2D', 'SPEED2D', 'ANGLE2D', 'CUMINF2D', 'GASMD2D', 'GASFLAG2D', 'GAMCUZ2D', 'GATDUZ2D']
+model_path_arg = ARGV[3]
+
+def read_config_model_path
+  begin
+    cfg_path = File.join('scripts', 'pipeline_config.json')
+    if File.exist?(cfg_path)
+      cfg = JSON.parse(File.read(cfg_path))
+      return cfg['model_path'] if cfg && cfg['model_path'] && !cfg['model_path'].empty?
+    end
+  rescue => e
+    puts "Warning: Could not read config: #{e.message}"
+  end
+  nil
+end
 
 puts "Exporting simulation #{simulation_id} to #{output_directory}"
 puts "Attributes: #{attributes.join(', ')}"
 
 # Open the database and get the simulation object
 begin
-  database = WSApplication.open("models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm")
+  model_path = model_path_arg || read_config_model_path || "models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm"
+  database = WSApplication.open(model_path)
   puts "Database opened: #{database.name}"
   
   model = database.model_object_from_type_and_id('Sim', simulation_id)
