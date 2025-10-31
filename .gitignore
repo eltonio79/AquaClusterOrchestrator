@@ -1,4 +1,4 @@
-# Data directories
+﻿# Data directories
 data/
 models/
 output/
@@ -39,3 +39,5 @@ Thumbs.db
 *.prn
 *.tif
 
+
+*.gif
