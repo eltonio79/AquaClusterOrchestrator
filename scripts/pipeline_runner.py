@@ -136,6 +136,26 @@ class PipelineRunner:
             self.logger.error(f"Error running Ruby export: {e}")
             return False
     
+    def run_results_csv_export(self, sim_id: int, output_dir: str, selection_json: Optional[str] = None) -> bool:
+        """Run Ruby script to export simulation results to CSV via ICMExchange."""
+        try:
+            script_path = os.path.abspath(os.path.join(self.scripts_dir, "export_results_csv.rb"))
+            cmd = [self.icm_exchange_path, script_path, str(sim_id), output_dir]
+            if selection_json:
+                cmd.append(selection_json)
+            self.logger.info(f"Running CSV export: {' '.join(cmd)}")
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0:
+                if result.stdout.strip():
+                    self.logger.info(result.stdout)
+                return True
+            else:
+                self.logger.error(f"CSV export failed: rc={result.returncode}\n{result.stderr}")
+                return False
+        except Exception as e:
+            self.logger.error(f"Error running CSV export: {e}")
+            return False
+
     def run_ruby_script(self, script_name: str, *args) -> bool:
         """Run a Ruby script via ICMExchange."""
         try:
@@ -253,6 +273,29 @@ class PipelineRunner:
                     else:
                         self._md_write(f"- Exported rasters for simulation {sim_id} → `{output_dir}`")
             
+            # Optionally export CSV results (2D/1D) for downstream analytics
+            try:
+                cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+                export_csv = False
+                csv_selection = None
+                if os.path.exists(cfg_path):
+                    with open(cfg_path, 'r', encoding='utf-8-sig') as f:
+                        cfg = json.load(f)
+                        export_csv = cfg.get('export_csv', False)
+                        sel = cfg.get('csv_selection', None)
+                        if sel is not None:
+                            csv_selection = json.dumps(sel)
+                if export_csv:
+                    for sim_id in ( [rule_config.baseline_id or 1] if rule_config.analysis_type.value != 'comparison' else [rule_config.baseline_id or 1, rule_config.candidate_id or 2] ):
+                        csv_dir = os.path.join(self.data_dir, "experiments", "csv", f"sim_{sim_id}")
+                        os.makedirs(csv_dir, exist_ok=True)
+                        if self.run_results_csv_export(sim_id, csv_dir, csv_selection):
+                            self._md_write(f"- Exported CSV results for simulation {sim_id} → `{csv_dir}`")
+                        else:
+                            self._md_write(f"- CSV export failed for simulation {sim_id}")
+            except Exception as e:
+                self.logger.warning(f"CSV export step skipped due to error: {e}")
+
             # Process the rule
             result = self.cluster_processor.process_rule(rule_config)
             self.results.append(result)

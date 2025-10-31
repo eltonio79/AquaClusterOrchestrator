@@ -3,6 +3,8 @@
   "data_dir": "data/output",
   "icm_exchange": "output/ICM_Release.x64/ICMExchange.exe",
   "run_simulations": false,
+  "export_csv": true,
+  "csv_selection": null,
   "clusters_group_name": "Clusters",
   "source_group_name": "2D Demo - 2d rain",
   "source_network_name": "5k"
