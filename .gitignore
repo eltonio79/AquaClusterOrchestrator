@@ -1,8 +1,8 @@
 # Data directories
-./data
-./models
-./output
-./venv
+data/
+models/
+output/
+venv/
 
 # Python cache
 __pycache__/
@@ -37,4 +37,5 @@ Thumbs.db
 # Large generated files
 *.dat
 *.prn
+*.tif
 
