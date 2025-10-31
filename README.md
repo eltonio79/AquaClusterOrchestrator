@@ -321,7 +321,7 @@ The pipeline includes comprehensive error handling:
 
 ## License
 
-This pipeline is part of the Ruby Hackathon 2025 project and follows the project's licensing terms.
+This pipeline is part of the AquaClusterOrchestrator project and follows the project's licensing terms.
 
 ## Support
 
