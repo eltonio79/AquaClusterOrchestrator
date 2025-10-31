@@ -1,10 +1,12 @@
 ﻿./.cursor
+./.cursor/environment.json
 ./.cursor/mcp.json
 ./.cursor/rules
 ./.cursor/rules/00-repo-hygiene-and-local-context.mdc
 ./.cursor/rules/10-ruby-hackathon-cluster-analysis-rules.mdc
 ./.cursor/rules/20-infoworks-ruby-rules.mdc
 ./.gitignore
+./AquaClusterOrchestrator.code-workspace
 ./data
 ./data/CLUSTER_ANALYSIS_PIPELINE_10_30_2025.html
 ./data/input
@@ -11556,7 +11558,6 @@
 ./paths.txt
 ./README.md
 ./requirements.txt
-./Ruby_Hackathon_2025.code-workspace
 ./scripts
 ./scripts/__pycache__
 ./scripts/__pycache__/cluster_processor.cpython-313.pyc
