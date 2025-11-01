@@ -106,7 +106,7 @@ Agent status is tracked in `data/output/config/agent_status.json`:
 
 ### Monitoring Dashboard
 
-Open `temp/agent_monitor.html` in a web browser to view:
+Open `data/output/agent_monitor.html` in a web browser to view:
 - Agent status with green/red indicators
 - Task status with progress indicators
 - Available agents counter
