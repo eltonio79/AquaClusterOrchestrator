@@ -95,12 +95,44 @@ python scripts/pipeline_runner.py --rules depth_change_analysis
 
 #### Optimizer
 
-Optimize clustering parameters:
+Optimize clustering parameters for all rules:
+
+```bash
+python scripts/optimizer.py --all-rules
+```
+
+Optimize a specific rule:
 
 ```bash
 python scripts/optimizer.py --rule depth_change_analysis
-python scripts/optimizer.py --all-rules
 ```
+
+The optimizer will:
+- Test multiple parameter combinations
+- Find best parameters based on quality metrics
+- Save results to `data/output/experiments/`
+- Update rule JSON files with optimized parameters
+- Generate optimization summary report
+
+#### Validation
+
+Validate optimized rules:
+
+```bash
+python scripts/validate_optimized_rules.py --all-rules
+```
+
+Validate a specific rule:
+
+```bash
+python scripts/validate_optimized_rules.py --rule depth_change_analysis
+```
+
+The validator will:
+- Run pipeline with optimized parameters
+- Compare results with previous runs
+- Validate quality metrics
+- Generate validation report with recommendations
 
 #### Run Comparison
 
@@ -122,6 +154,20 @@ With tagging:
 
 ```powershell
 .\scripts\commit_iteration.ps1 -Message "Best parameters found" -Tag
+```
+
+### Cleanup and Maintenance
+
+Clean up old logs:
+
+```powershell
+.\scripts\cleanup_agent_logs.ps1
+```
+
+Archive old experiment results (older than 30 days):
+
+```powershell
+.\scripts\cleanup_experiments.ps1
 ```
 
 ## Rule Configuration
@@ -203,12 +249,16 @@ data/output/
 
 ## Optimization
 
-The pipeline includes automated parameter optimization:
+The pipeline includes comprehensive automated parameter optimization:
 
-1. **Parameter Space Exploration**: Systematic testing of clustering parameters
-2. **Quality Metrics**: Silhouette score, cohesion, separation metrics
-3. **Best Parameter Identification**: Automatic selection of optimal configurations
-4. **Iterative Refinement**: Multiple optimization cycles with improvement tracking
+1. **Parameter Space Exploration**: Systematic testing of clustering parameters (k-values, thresholds, algorithms)
+2. **Quality Metrics**: Composite score, silhouette score, cohesion, separation metrics
+3. **Best Parameter Identification**: Automatic selection of optimal configurations based on quality metrics
+4. **Automatic Updates**: Rule JSON files are automatically updated with best parameters
+5. **Validation**: Automated validation of optimized rules with comparison to previous runs
+6. **Iterative Refinement**: Multiple optimization cycles with improvement tracking
+
+See [docs/OPTIMIZATION_GUIDE.md](docs/OPTIMIZATION_GUIDE.md) for detailed optimization workflow.
 
 ## Git Integration
 
@@ -243,6 +293,8 @@ This tests:
 - **`exporter.py`**: Exports results to CSV, GeoJSON, and markdown formats
 - **`pipeline_runner.py`**: Main orchestrator for the complete pipeline
 - **`optimizer.py`**: Parameter optimization and quality assessment
+- **`validate_optimized_rules.py`**: Validation of optimized rules and comparison with previous runs
+- **`verify_pipeline_results.py`**: Automatic verification of pipeline output quality
 - **`compare_runs.py`**: Comparison between different pipeline runs
 
 ### Ruby Scripts

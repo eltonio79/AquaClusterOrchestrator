@@ -1,5 +1,7 @@
 ﻿./.cursor
 ./.cursor/mcp.json
+./.cursor/plans
+./.cursor/plans/cluster-pipeline-optimization-and-validation-dfa0945d.plan.md
 ./.cursor/rules
 ./.cursor/rules/00-repo-hygiene-and-local-context.mdc
 ./.cursor/rules/10-ruby-hackathon-cluster-analysis-rules.mdc
@@ -7,60 +9,326 @@
 ./.gitignore
 ./AquaClusterOrchestrator.code-workspace
 ./data
-./data/CLUSTER_ANALYSIS_PIPELINE_10_30_2025.html
 ./data/input
 ./data/output
+./data/output/config
+./data/output/config/active
+./data/output/config/active/run_manifest_20251101_123940.json
+./data/output/config/active/run_manifest_20251101_125326.json
+./data/output/config/active/run_manifest_20251101_125417.json
+./data/output/config/active/run_manifest_20251101_125846.json
+./data/output/config/processed
+./data/output/config/processed/run_manifest_20251030_161256.json
+./data/output/config/processed/run_manifest_20251030_161931.json
+./data/output/config/processed/run_manifest_20251030_162046.json
+./data/output/config/processed/run_manifest_20251030_162207.json
+./data/output/config/processed/run_manifest_20251030_163011.json
+./data/output/config/processed/run_manifest_20251030_163055.json
+./data/output/config/processed/run_manifest_20251030_163201.json
+./data/output/config/processed/run_manifest_20251030_164354.json
+./data/output/config/processed/run_manifest_20251030_164428.json
+./data/output/config/processed/run_manifest_20251030_164504.json
+./data/output/experiments
+./data/output/experiments/csv
+./data/output/experiments/csv/sim_1
+./data/output/experiments/csv/sim_2
 ./data/output/logs
-./data/output/logs/.monitor_lock.txt
-./data/output/logs/agent_run_20251030_152834.md
-./data/output/logs/agent_run_20251030_160049.md
-./data/output/logs/agent_run_20251031_131532.md
-./data/output/logs/agent_run_20251031_141633.md
-./data/output/logs/agent_run_20251031_162427.md
-./data/output/logs/agent_run_20251031_183625.md
-./data/output/logs/agent_run_20251031_183656.md
-./data/output/logs/pipeline_20251030_161252.log
-./data/output/logs/pipeline_20251030_161928.log
-./data/output/logs/pipeline_20251030_162043.log
-./data/output/logs/pipeline_20251030_162201.log
-./data/output/logs/pipeline_20251030_163011.log
-./data/output/logs/pipeline_20251030_163047.log
-./data/output/logs/pipeline_20251030_163158.log
-./data/output/logs/pipeline_20251030_164351.log
-./data/output/logs/pipeline_20251030_164425.log
-./data/output/logs/pipeline_20251030_164501.log
-./data/output/logs/pipeline_20251030_223318.log
-./data/output/logs/pipeline_20251030_223330.log
-./data/output/logs/pipeline_20251030_223346.log
-./data/output/logs/pipeline_20251030_223359.log
-./data/output/logs/pipeline_20251030_224340.log
-./data/output/logs/pipeline_20251030_224348.log
-./data/output/logs/pipeline_run_20251030_161252.md
-./data/output/logs/pipeline_run_20251030_161928.md
-./data/output/logs/pipeline_run_20251030_162043.md
-./data/output/logs/pipeline_run_20251030_162201.md
-./data/output/logs/pipeline_run_20251030_163011.md
-./data/output/logs/pipeline_run_20251030_163047.md
-./data/output/logs/pipeline_run_20251030_163158.md
-./data/output/logs/pipeline_run_20251030_164351.md
-./data/output/logs/pipeline_run_20251030_164425.md
-./data/output/logs/pipeline_run_20251030_164501.md
-./data/output/logs/pipeline_run_20251030_223318.md
-./data/output/logs/pipeline_run_20251030_223330.md
-./data/output/logs/pipeline_run_20251030_223346.md
-./data/output/logs/pipeline_run_20251030_223359.md
-./data/output/logs/pipeline_run_20251030_224340.md
-./data/output/logs/pipeline_run_20251030_224348.md
-./data/output/run_manifest_20251030_161256.json
-./data/output/run_manifest_20251030_161931.json
-./data/output/run_manifest_20251030_162046.json
-./data/output/run_manifest_20251030_162207.json
-./data/output/run_manifest_20251030_163011.json
-./data/output/run_manifest_20251030_163055.json
-./data/output/run_manifest_20251030_163201.json
-./data/output/run_manifest_20251030_164354.json
-./data/output/run_manifest_20251030_164428.json
-./data/output/run_manifest_20251030_164504.json
+./data/output/logs/active
+./data/output/logs/active/.monitor_lock.txt
+./data/output/logs/active/pipeline_20251101_123857.log
+./data/output/logs/active/pipeline_20251101_125305.log
+./data/output/logs/active/pipeline_20251101_125315.log
+./data/output/logs/active/pipeline_20251101_125412.log
+./data/output/logs/active/pipeline_20251101_125835.log
+./data/output/logs/active/pipeline_20251101_132510.log
+./data/output/logs/active/pipeline_20251101_132550.log
+./data/output/logs/active/pipeline_20251101_132618.log
+./data/output/logs/active/pipeline_20251101_133251.log
+./data/output/logs/active/pipeline_20251101_133352.log
+./data/output/logs/active/test_pipeline_20251101_123853.md.stderr
+./data/output/logs/active/test_pipeline_20251101_123853.md.stdout
+./data/output/logs/processed
+./data/output/logs/processed/agent_run_20251030_152834.md
+./data/output/logs/processed/agent_run_20251030_160049.md
+./data/output/logs/processed/agent_run_20251031_131532.md
+./data/output/logs/processed/agent_run_20251031_141633.md
+./data/output/logs/processed/agent_run_20251031_162427.md
+./data/output/logs/processed/agent_run_20251031_183625.md
+./data/output/logs/processed/agent_run_20251031_183656.md
+./data/output/logs/processed/agent_run_20251031_190857.md
+./data/output/logs/processed/agent_run_20251031_224148.md
+./data/output/logs/processed/agent_run_20251101_123528.md
+./data/output/logs/processed/agent_run_20251101_125015.md
+./data/output/logs/processed/agent_run_20251101_125028.md
+./data/output/logs/processed/agent_run_20251101_132207.md
+./data/output/logs/processed/agent_run_20251101_133625.md
+./data/output/logs/processed/pipeline_20251030_161252.log
+./data/output/logs/processed/pipeline_20251030_161928.log
+./data/output/logs/processed/pipeline_20251030_162043.log
+./data/output/logs/processed/pipeline_20251030_162201.log
+./data/output/logs/processed/pipeline_20251030_163011.log
+./data/output/logs/processed/pipeline_20251030_163047.log
+./data/output/logs/processed/pipeline_20251030_163158.log
+./data/output/logs/processed/pipeline_20251030_164351.log
+./data/output/logs/processed/pipeline_20251030_164425.log
+./data/output/logs/processed/pipeline_20251030_164501.log
+./data/output/logs/processed/pipeline_20251030_223318.log
+./data/output/logs/processed/pipeline_20251030_223330.log
+./data/output/logs/processed/pipeline_20251030_223346.log
+./data/output/logs/processed/pipeline_20251030_223359.log
+./data/output/logs/processed/pipeline_20251030_224340.log
+./data/output/logs/processed/pipeline_20251030_224348.log
+./data/output/logs/processed/pipeline_run_20251030_161252.md
+./data/output/logs/processed/pipeline_run_20251030_161928.md
+./data/output/logs/processed/pipeline_run_20251030_162043.md
+./data/output/logs/processed/pipeline_run_20251030_162201.md
+./data/output/logs/processed/pipeline_run_20251030_163011.md
+./data/output/logs/processed/pipeline_run_20251030_163047.md
+./data/output/logs/processed/pipeline_run_20251030_163158.md
+./data/output/logs/processed/pipeline_run_20251030_164351.md
+./data/output/logs/processed/pipeline_run_20251030_164425.md
+./data/output/logs/processed/pipeline_run_20251030_164501.md
+./data/output/logs/processed/pipeline_run_20251030_223318.md
+./data/output/logs/processed/pipeline_run_20251030_223330.md
+./data/output/logs/processed/pipeline_run_20251030_223346.md
+./data/output/logs/processed/pipeline_run_20251030_223359.md
+./data/output/logs/processed/pipeline_run_20251030_224340.md
+./data/output/logs/processed/pipeline_run_20251030_224348.md
+./data/output/logs/processed/pipeline_run_20251101_123857.md
+./data/output/logs/processed/pipeline_run_20251101_125305.md
+./data/output/logs/processed/pipeline_run_20251101_125315.md
+./data/output/logs/processed/pipeline_run_20251101_125412.md
+./data/output/logs/processed/pipeline_run_20251101_125835.md
+./data/output/logs/processed/pipeline_run_20251101_132510.md
+./data/output/logs/processed/pipeline_run_20251101_132550.md
+./data/output/logs/processed/pipeline_run_20251101_132618.md
+./data/output/logs/processed/pipeline_run_20251101_133251.md
+./data/output/logs/processed/pipeline_run_20251101_133352.md
+./data/output/logs/processed/test_pipeline_20251101_123853.md
+./data/output/raster
+./data/output/raster/Raster_2d_Export
+./data/output/raster/Raster_2d_Export/2D Demo - 2d rain
+./data/output/raster/Raster_2d_Export/2D Demo - 2d rain/sim_1
+./data/output/raster/Raster_2d_Export/2D Demo - 2d rain/sim_1/sim_1
+./data/output/raster/Raster_2d_Export/2D Demo - 2d rain/sim_2
+./data/output/raster/Raster_2d_Export/2D Demo - 2d rain/sim_2/sim_2
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/ANGLE2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/CUMINF2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/DEPTH2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GAMCUZ2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASFLAG2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GASMD2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/GATDUZ2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/sim_1
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_0.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_1200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_1500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_1800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_2100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_2400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_2700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_3000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_3300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_3600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_3900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_4200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_4500.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_4800.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_5100.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_5400.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_5700.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_6000.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_6300.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_6600.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_6900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_7200.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/SPEED2D_900.000000.tif
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_2
+./data/output/raster/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_2/sim_2
+./data/output/Raster_2d_Export
+./data/output/Raster_2d_Export/2D Demo - 2d rain
+./data/output/Raster_2d_Export/2D Demo - 2d rain/sim_1
+./data/output/Raster_2d_Export/2D Demo - 2d rain/sim_1/viz
+./data/output/Ruby_Hackathon_Medium_2D_Model
+./data/output/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain
+./data/output/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1
+./data/output/Ruby_Hackathon_Medium_2D_Model/2D Demo - 2d rain/sim_1/viz
+./data/output/viz
+./docs
+./docs/OPTIMIZATION_GUIDE.md
 ./documentation
 ./documentation/Appendix
 ./documentation/Appendix/add_ons.md
@@ -910,6 +1178,67 @@
 ./examples/ExportRaster2D_UI.rb
 ./models
 ./models/standalone
+./models/standalone/Ruby_Hackathon_Medium_2D_Model
+./models/standalone/Ruby_Hackathon_Medium_2D_Model.icmm
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/CGDT1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/Extras
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GGM1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Index.cfg
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_1.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_2.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_3.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_1.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_2.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_3.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_1.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_2.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_3.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_1.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_2.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_3.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile16_0_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_0_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_0_1.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_1_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_1_1.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile4_0_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile8_0_0.til
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/version.dat
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/MODG1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/NNET1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/NNET1BlobPreview.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/1.ndjson.gz
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/2.ndjson.gz
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/3.ndjson.gz
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/4.ndjson.gz
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/5.ndjson.gz
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/6.ndjson.gz
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/create.log
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.wdb
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN1Blob.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN2.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN2Blob.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RootObjects.Dat
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RootPrefs.Dat
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RUN1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RUN2.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM2.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM3.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/THM1.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/THM1Blob.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/WKSP_brodowm.DAT
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/Ruby_Hackathon_Medium_2D_Model.icmm
+./models/standalone/Ruby_Hackathon_Medium_2D_Model/Ruby_Hackathon_Medium_2D_Model.icmm.dat
 ./models/transportable
 ./models/transportable/Large 2D
 ./models/transportable/Large 2D/Large_2D.icmt
@@ -6404,8 +6733,11 @@
 ./scripts/__pycache__
 ./scripts/__pycache__/cluster_processor.cpython-313.pyc
 ./scripts/__pycache__/exporter.cpython-313.pyc
+./scripts/__pycache__/pipeline_runner.cpython-313.pyc
 ./scripts/__pycache__/rule_parser.cpython-313.pyc
 ./scripts/__pycache__/visualizer.cpython-313.pyc
+./scripts/cleanup_agent_logs.ps1
+./scripts/cleanup_experiments.ps1
 ./scripts/cleanup_generated_data.ps1
 ./scripts/clone_icmm_and_insert.rb
 ./scripts/cluster_processor.py
@@ -6413,11 +6745,13 @@
 ./scripts/commit_iteration.ps1
 ./scripts/compare_runs.py
 ./scripts/compare_simulations_ui.rb
+./scripts/copy_model_to_standalone.ps1
 ./scripts/copy_network_to_group.rb
 ./scripts/copy_network_to_group_by_name.rb
 ./scripts/create_or_copy_run_by_name.rb
 ./scripts/create_polygons_from_geojson.rb
 ./scripts/create_test_polygon.rb
+./scripts/delegate_task_to_agent.ps1
 ./scripts/delete_polygons.rb
 ./scripts/delete_polygons_by_name.rb
 ./scripts/demo_pipeline.py
@@ -6442,6 +6776,8 @@
 ./scripts/list_groups_and_networks.rb
 ./scripts/list_model_objects.rb
 ./scripts/list_simulations.rb
+./scripts/manage_agents.ps1
+./scripts/MONITOR_LOCK_README.md
 ./scripts/monitor_most_recent_agents_markdown_log.ps1
 ./scripts/optimizer.py
 ./scripts/pipeline_config.json
@@ -6452,16 +6788,83 @@
 ./scripts/run_pipeline.ps1
 ./scripts/run_pipeline_background.ps1
 ./scripts/run_pipeline_interactive.ps1
+./scripts/safe_run.ps1
 ./scripts/setup_pipeline.ps1
 ./scripts/show_high_depths.json
 ./scripts/show_high_depths.rul
+./scripts/stop_monitor_agents.ps1
 ./scripts/test_monitor.ps1
 ./scripts/test_pipeline.py
+./scripts/validate_optimized_rules.py
+./scripts/verify_pipeline_results.py
 ./scripts/visualizer.py
 ./scripts/volume_change_analysis.json
 ./scripts/volume_change_analysis.rul
+./tasks
+./tasks/README_AGENT_TASKS.md
 ./temp
-./temp/cursor_kontynuacja_rozmowy_o_pipeline_a.md
+./temp/Cursor_Chat_01.md
+./temp/Cursor_Chat_02.md
+./temp/Medium 2D
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/CGDT1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/Extras
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GGM1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Index.cfg
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_1.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_2.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_0_3.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_1.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_2.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_1_3.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_1.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_2.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_2_3.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_1.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_2.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile1_3_3.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile16_0_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_0_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_0_1.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_1_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile2_1_1.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile4_0_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/Tile8_0_0.til
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/GM000001/version.dat
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/MODG1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/NNET1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/NNET1BlobPreview.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/1.ndjson.gz
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/2.ndjson.gz
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/3.ndjson.gz
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/4.ndjson.gz
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/5.ndjson.gz
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/6.ndjson.gz
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.log/create.log
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/numbatdata/s169-1.wdb
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN1Blob.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN2.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RAIN2Blob.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RootObjects.Dat
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RootPrefs.Dat
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RUN1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/RUN2.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM2.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/SIM3.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/THM1.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/THM1Blob.DAT
+./temp/Medium 2D/DBE888BD-3AF1-4386-AB48-7DAE85FFF55B/WKSP_brodowm.DAT
+./temp/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm
+./temp/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm.dat
 ./tools
 ./tools/mcp_server.py
 ./tools/templates

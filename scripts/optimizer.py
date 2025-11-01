@@ -439,6 +439,157 @@ class PipelineOptimizer:
         self.parameter_optimizer = ParameterOptimizer(data_dir)
         self.logger = logging.getLogger(__name__)
     
+    def save_best_params(self, rule_name: str, best_params: Dict[str, Any]) -> str:
+        """Save best parameters to a separate JSON file."""
+        experiments_dir = self.parameter_optimizer.experiments_dir
+        os.makedirs(experiments_dir, exist_ok=True)
+        
+        best_params_file = os.path.join(experiments_dir, f"{rule_name}_best_params.json")
+        
+        params_to_save = {
+            'rule_name': rule_name,
+            'timestamp': datetime.now().isoformat(),
+            'best_parameters': best_params.get('best_parameters', {}),
+            'best_metrics': best_params.get('best_metrics', {}),
+            'experiment_id': best_params.get('experiment_id', ''),
+            'improvement_over_default': best_params.get('improvement_over_default', {})
+        }
+        
+        with open(best_params_file, 'w', encoding='utf-8') as f:
+            json.dump(params_to_save, f, indent=2)
+        
+        self.logger.info(f"Saved best parameters: {best_params_file}")
+        return best_params_file
+    
+    def update_rule_json(self, rule_name: str, best_params: Dict[str, Any]) -> bool:
+        """Update rule JSON file with optimized parameters."""
+        rule_json_path = os.path.join(self.scripts_dir, f"{rule_name}.json")
+        
+        if not os.path.exists(rule_json_path):
+            self.logger.warning(f"Rule JSON file not found: {rule_json_path}")
+            return False
+        
+        try:
+            # Load existing rule JSON
+            with open(rule_json_path, 'r', encoding='utf-8') as f:
+                rule_data = json.load(f)
+            
+            # Extract best parameters from optimization result
+            best_params_dict = best_params.get('best_parameters', {})
+            
+            # Update clustering parameters
+            if 'clustering' in best_params_dict:
+                if 'clustering' not in rule_data:
+                    rule_data['clustering'] = {}
+                rule_data['clustering'].update(best_params_dict['clustering'])
+            
+            # Update thresholds
+            if 'thresholds' in best_params_dict:
+                if 'thresholds' not in rule_data:
+                    rule_data['thresholds'] = {}
+                rule_data['thresholds'].update(best_params_dict['thresholds'])
+            
+            # Save updated rule JSON
+            with open(rule_json_path, 'w', encoding='utf-8') as f:
+                json.dump(rule_data, f, indent=2)
+            
+            self.logger.info(f"Updated rule JSON: {rule_json_path}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error updating rule JSON {rule_json_path}: {e}")
+            return False
+    
+    def generate_optimization_summary(self, optimization_results: Dict[str, Any]) -> str:
+        """Generate a markdown summary report of optimization results."""
+        experiments_dir = self.parameter_optimizer.experiments_dir
+        os.makedirs(experiments_dir, exist_ok=True)
+        
+        summary_file = os.path.join(experiments_dir, "optimization_summary.md")
+        
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        with open(summary_file, 'w', encoding='utf-8') as f:
+            f.write(f"# Optimization Summary Report\n\n")
+            f.write(f"Generated: {timestamp}\n\n")
+            f.write(f"## Overview\n\n")
+            f.write(f"This report summarizes the optimization results for all rules.\n\n")
+            
+            # Summary statistics
+            total_rules = len(optimization_results)
+            successful_rules = sum(1 for r in optimization_results.values() if 'error' not in r)
+            total_experiments = sum(r.get('total_experiments', 0) for r in optimization_results.values())
+            
+            f.write(f"- **Total rules optimized:** {total_rules}\n")
+            f.write(f"- **Successful optimizations:** {successful_rules}\n")
+            f.write(f"- **Failed optimizations:** {total_rules - successful_rules}\n")
+            f.write(f"- **Total experiments run:** {total_experiments}\n\n")
+            
+            f.write(f"## Optimization Results by Rule\n\n")
+            
+            for rule_name, result in sorted(optimization_results.items()):
+                f.write(f"### {rule_name}\n\n")
+                
+                if 'error' in result:
+                    f.write(f"**Status:** ❌ Failed\n")
+                    f.write(f"**Error:** {result['error']}\n\n")
+                    continue
+                
+                f.write(f"**Status:** ✅ Success\n")
+                f.write(f"**Total experiments:** {result.get('total_experiments', 0)}\n\n")
+                
+                best_params = result.get('best_parameters', {})
+                if best_params:
+                    best_metrics = best_params.get('best_metrics', {})
+                    f.write(f"#### Best Metrics\n\n")
+                    f.write(f"| Metric | Value |\n")
+                    f.write(f"|--------|-------|\n")
+                    f.write(f"| Composite Score | {best_metrics.get('composite_score', 0.0):.4f} |\n")
+                    f.write(f"| Cohesion | {best_metrics.get('cohesion', 0.0):.4f} |\n")
+                    f.write(f"| Separation | {best_metrics.get('separation', 0.0):.4f} |\n\n")
+                    
+                    improvement = best_params.get('improvement_over_default', {})
+                    if improvement:
+                        f.write(f"#### Improvement Over Default\n\n")
+                        f.write(f"| Metric | Improvement |\n")
+                        f.write(f"|--------|-------------|\n")
+                        rel_improvement = improvement.get('relative_improvement', 0.0)
+                        f.write(f"| Composite Score | {improvement.get('composite_score_improvement', 0.0):.4f} |\n")
+                        f.write(f"| Relative Improvement | {rel_improvement:.2f}% |\n\n")
+                    
+                    best_params_dict = best_params.get('best_parameters', {})
+                    if best_params_dict:
+                        f.write(f"#### Best Parameters\n\n")
+                        if 'clustering' in best_params_dict:
+                            clustering = best_params_dict['clustering']
+                            f.write(f"**Clustering:**\n")
+                            f.write(f"- Method: {clustering.get('method', 'N/A')}\n")
+                            if 'k' in clustering:
+                                f.write(f"- k: {clustering.get('k')}\n")
+                            if 'min_size' in clustering:
+                                f.write(f"- min_size: {clustering.get('min_size')}\n")
+                            f.write(f"\n")
+                        if 'thresholds' in best_params_dict:
+                            thresholds = best_params_dict['thresholds']
+                            f.write(f"**Thresholds:**\n")
+                            for key, value in thresholds.items():
+                                f.write(f"- {key}: {value}\n")
+                            f.write(f"\n")
+                    
+                    f.write(f"**Results file:** `{result.get('results_file', 'N/A')}`\n")
+                    f.write(f"**Best params file:** `{rule_name}_best_params.json`\n\n")
+                
+                f.write(f"---\n\n")
+            
+            f.write(f"## Next Steps\n\n")
+            f.write(f"1. Review optimization results for each rule\n")
+            f.write(f"2. Run validation pipeline with optimized parameters (Agent 2)\n")
+            f.write(f"3. Verify quality metrics meet requirements\n")
+            f.write(f"4. Update rule JSON files if needed\n\n")
+        
+        self.logger.info(f"Generated optimization summary: {summary_file}")
+        return summary_file
+    
     def optimize_all_rules(self, opt_params: OptimizationParams) -> Dict[str, Any]:
         """Optimize parameters for all rules."""
         self.logger.info("Starting optimization for all rules")
@@ -466,10 +617,18 @@ class PipelineOptimizer:
                     experiment_results, rule_config.name
                 )
                 
+                # Save best parameters to separate file
+                best_params_file = self.save_best_params(rule_config.name, best_params)
+                
+                # Update rule JSON file with optimized parameters
+                update_success = self.update_rule_json(rule_config.name, best_params)
+                
                 optimization_results[rule_config.name] = {
                     'best_parameters': best_params,
                     'total_experiments': len(experiment_results),
-                    'results_file': results_file
+                    'results_file': results_file,
+                    'best_params_file': best_params_file,
+                    'rule_json_updated': update_success
                 }
                 
                 self.logger.info(f"Completed optimization for rule: {rule_config.name}")
@@ -481,6 +640,9 @@ class PipelineOptimizer:
                     'best_parameters': {},
                     'total_experiments': 0
                 }
+        
+        # Generate summary report
+        summary_file = self.generate_optimization_summary(optimization_results)
         
         return optimization_results
     
@@ -544,23 +706,44 @@ def main():
             results = optimizer.optimize_all_rules(opt_params)
             print(f"Optimized {len(results)} rules")
             
+            # Generate summary is already done in optimize_all_rules
+            summary_file = os.path.join(optimizer.parameter_optimizer.experiments_dir, "optimization_summary.md")
+            print(f"\nSummary report: {summary_file}")
+            
             for rule_name, result in results.items():
                 print(f"\n{rule_name}:")
-                print(f"  Best parameters: {result.get('best_parameters', {})}")
-                print(f"  Total experiments: {result.get('total_experiments', 0)}")
+                if 'error' in result:
+                    print(f"  ❌ Error: {result['error']}")
+                else:
+                    print(f"  ✅ Success")
+                    print(f"  Best params file: {result.get('best_params_file', 'N/A')}")
+                    print(f"  Rule JSON updated: {result.get('rule_json_updated', False)}")
+                    print(f"  Total experiments: {result.get('total_experiments', 0)}")
         
         elif args.rule:
             # Optimize single rule
             result = optimizer.optimize_single_rule(args.rule, opt_params)
             print(f"Optimization result for {args.rule}:")
-            print(f"  Best parameters: {result.get('best_parameters', {})}")
-            print(f"  Total experiments: {result.get('total_experiments', 0)}")
+            if 'error' in result:
+                print(f"  ❌ Error: {result['error']}")
+            else:
+                print(f"  ✅ Success")
+                print(f"  Best parameters: {result.get('best_parameters', {})}")
+                print(f"  Total experiments: {result.get('total_experiments', 0)}")
+                
+                # Also save best params and update JSON for single rule
+                best_params = result.get('best_parameters', {})
+                if best_params:
+                    optimizer.save_best_params(args.rule, best_params)
+                    optimizer.update_rule_json(args.rule, best_params)
         
         else:
             print("Please specify --rule <rule_name> or --all-rules")
     
     except Exception as e:
         print(f"Optimization failed: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":

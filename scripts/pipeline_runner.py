@@ -20,6 +20,7 @@ from rule_parser import RuleParser, RuleConfig
 from cluster_processor import ClusterProcessor
 from visualizer import RasterVisualizer, VisualizationConfig
 from exporter import CombinedExporter
+from verify_pipeline_results import PipelineVerifier
 
 
 class PipelineRunner:
@@ -49,6 +50,7 @@ class PipelineRunner:
         self.cluster_processor = ClusterProcessor(data_dir)
         self.visualizer = RasterVisualizer(os.path.join(data_dir, "viz"))
         self.exporter = CombinedExporter(os.path.join(data_dir, "results"))
+        self.verifier = PipelineVerifier(data_dir)
         
         # Set up logging
         self.logger = self._setup_logging()
@@ -414,6 +416,47 @@ class PipelineRunner:
                 'visualization_paths': viz_paths,
                 'processing_time': time.time()
             }
+            
+            # Run verification
+            self.logger.info(f"Verifying output for rule: {rule_config.name}")
+            try:
+                rule_config_dict = {
+                    'outputs': rule_config.outputs.__dict__ if hasattr(rule_config.outputs, '__dict__') else rule_config.outputs
+                }
+                verification_result, verification_log = self.verifier.verify_and_log(
+                    rule_config.name,
+                    rule_config_dict,
+                    os.path.join(self.data_dir, "logs", "active")
+                )
+                
+                # Add verification status to rule result
+                rule_result['verification'] = {
+                    'status': verification_result.get('overall_status', 'unknown'),
+                    'passed_checks': verification_result.get('summary', {}).get('passed_checks', 0),
+                    'total_checks': verification_result.get('summary', {}).get('total_checks', 0),
+                    'log_file': verification_log
+                }
+                
+                verification_status = verification_result.get('overall_status', 'unknown')
+                if verification_status == 'passed':
+                    self._md_write("- Verification: ✅ passed")
+                elif verification_status == 'partial':
+                    self._md_write("- Verification: ⚠️ partial")
+                else:
+                    self._md_write("- Verification: ❌ failed")
+                    self.logger.warning(f"Verification failed for rule: {rule_config.name}")
+                    # Add to manifest errors but don't fail the rule
+                    self.run_manifest['errors'].append(f"Verification failed for rule {rule_config.name}: see {verification_log}")
+                
+                self._md_write(f"- Verification log: `{verification_log}`")
+                
+            except Exception as e:
+                self.logger.warning(f"Error during verification: {e}")
+                rule_result['verification'] = {
+                    'status': 'error',
+                    'error': str(e)
+                }
+                self._md_write(f"- Verification: ❌ error ({e})")
             
             self.run_manifest['rules_processed'].append(rule_result)
             
