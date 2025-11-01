@@ -46,3 +46,10 @@ alwaysApply: true
 ## 5) Git etiquette (before committing generated assets)
 - Ensure `./paths.txt` is updated (`./scripts/dir.bat`).
 - Commit only essential generated artifacts (e.g., minimal rasters/metrics for reproducibility).
+
+## 6) Model Selection for Tasks
+- **For coding tasks** (scripts, functions, modules, algorithms): **ALWAYS use Composer-1**
+- **For documentation/descriptions** (README, guides, comments, explanations): **Use GPT-5 if available**, otherwise Composer-1
+- **For code-related analysis/reasoning** (architectural decisions, code review, technical planning, debugging): **ALWAYS use Composer-1**
+- **For documentation-related analysis/reasoning** (writing guides, documentation planning, text analysis): **Use GPT-5 if available**, otherwise Composer-1
+- **When in doubt**: Default to Composer-1 for code and code-related analysis, GPT-5 for text and documentation

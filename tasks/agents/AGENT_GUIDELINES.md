@@ -5,7 +5,34 @@
 
 ---
 
+## Quick Start for Agents
+
+**When assigned to an agent role, you will receive a rule file** (e.g., `30-raster-monitor-agent.mdc`, `31-experiment-monitor-agent.mdc`, etc.).
+
+**To start working:**
+1. Read the complete rule file for your agent (the `.mdc` file)
+2. Follow all instructions in that file
+3. The rule file contains:
+   - CRITICAL RESTRICTIONS (what you MUST NOT do)
+   - Your agent instruction file (`tasks/agents/0X_*_AGENT.md`)
+   - Universal guidelines (this file: `AGENT_GUIDELINES.md`)
+   - Script reference (`docs/SCRIPTS_REFERENCE.md`)
+   - Git workflow (branch, commit, merge rules)
+   - Detailed behavior rules
+   - Testing instructions
+
+**You have ALL the information you need** - no need to ask questions. Just follow the rules.
+
+---
+
 ## General Principles
+
+### 0. Model Selection for Tasks 🤖
+- **For coding tasks** (scripts, functions, modules, algorithms): **ALWAYS use Composer-1**
+- **For documentation/descriptions** (README, guides, comments, explanations): **Use GPT-5 if available**, otherwise Composer-1
+- **For code-related analysis/reasoning** (architectural decisions, code review, technical planning, debugging): **ALWAYS use Composer-1**
+- **For documentation-related analysis/reasoning** (writing guides, documentation planning, text analysis): **Use GPT-5 if available**, otherwise Composer-1
+- **When in doubt**: Default to Composer-1 for code and code-related analysis, GPT-5 for text and documentation
 
 ### 1. Follow Existing Patterns ✅
 - **Always** check existing scripts for patterns before implementing new functionality
@@ -90,6 +117,43 @@
 - **Export data**: Make analysis data available for review
 
 ---
+
+## Git Workflow for Agents
+
+### Working on Branches
+- **Always work on your own branch**: Create branch named `agent/<agent_name>` or `agent/<agent_name>/<feature>`
+- **Branch naming**: `agent/raster_monitor`, `agent/cleanup/feature_name`, etc.
+- **Create branch before starting work**: `git checkout -b agent/<agent_name>`
+- **Don't work directly on master**: Always create a branch first
+
+### Commit Guidelines
+- **Commit after logical changes**: Group related changes together in single commit
+- **Commit message format**: Max 4 sentences, each on one line separated by spaces
+- **Sentence format**: Each sentence starts with capital letter and ends with period
+- **No line breaks**: Single line message, sentences separated by space
+- **Example**: `"Added raster monitoring functionality. Implemented file detection logic. Added pipeline trigger mechanism. Updated status tracking."`
+
+**Commit Message Rules:**
+- Each sentence describes one logical group of changes
+- Maximum 4 sentences per commit
+- Format: `"First sentence. Second sentence. Third sentence. Fourth sentence."`
+- Start with capital letter, end with period
+- No newlines in commit message
+
+### Merging Changes
+- **Auto-merge preferred**: Let Git auto-merge simple changes
+- **For complex merges**: Use Git's merge conflict resolution
+- **Coordination between agents**: If multiple agents modify same files, agents should:
+  1. Pull latest changes before starting work
+  2. Commit frequently to reduce merge conflicts
+  3. If conflict occurs: Resolve using Git merge tools (AI can help with conflict resolution)
+  4. After merge: Test changes, then push
+
+### Commit Frequency
+- **After logical changes**: Commit when a feature or fix is complete
+- **Group related changes**: Don't commit every single file edit - group logical changes
+- **Test before commit**: Ensure changes work before committing
+- **Don't commit broken code**: Always test first
 
 ## Code Quality Standards
 

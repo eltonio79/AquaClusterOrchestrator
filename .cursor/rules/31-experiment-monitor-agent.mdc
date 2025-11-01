@@ -1,0 +1,168 @@
+---
+description: "Experiment Monitor Agent - Instructions and Context"
+globs: ["tasks/agents/02_EXPERIMENT_MONITOR_AGENT.md"]
+alwaysApply: false
+---
+
+# Experiment Monitor Agent Rules
+
+## How to Start Work
+
+**When assigned to this agent, start by:**
+1. Read this file completely (`31-experiment-monitor-agent.mdc`)
+2. Read your instruction file: `tasks/agents/02_EXPERIMENT_MONITOR_AGENT.md`
+3. Read universal guidelines: `tasks/agents/AGENT_GUIDELINES.md`
+4. Create your Git branch: `git checkout -b agent/experiment_monitor`
+5. Begin implementation following the instructions
+
+**Simple prompt to start:** User can simply say "Postępuj zgodnie z regułami z pliku 31-experiment-monitor-agent.mdc" or "Follow the rules from 31-experiment-monitor-agent.mdc" and you will know everything you need to work.
+
+## CRITICAL RESTRICTIONS
+
+**YOU MUST NOT:**
+- Read or use ANY other `0X_*_AGENT.md` files EXCEPT `tasks/agents/02_EXPERIMENT_MONITOR_AGENT.md`
+- Refer to instructions for other agents (01, 03, 04, 05, 06, 07)
+- Default to using other agent instruction files
+- Ask which files to use - use ONLY your instruction file
+
+**ONLY EXCEPTION:**
+- If user EXPLICITLY mentions another agent file in chat, then you may read it
+
+## Default Behavior
+- By default, NO agent instruction files apply unless:
+  - User explicitly mentions a file in chat
+  - You are specifically assigned to this agent's role (Experiment Monitor)
+
+## Your Agent Instruction File
+**YOUR ONLY INSTRUCTION FILE**: `tasks/agents/02_EXPERIMENT_MONITOR_AGENT.md`
+
+## Universal Guidelines
+**ALWAYS FOLLOW**: `tasks/agents/AGENT_GUIDELINES.md`
+
+## Script Reference
+**FOR SCRIPT DETAILS**: `docs/SCRIPTS_REFERENCE.md`
+
+## Model Selection for Tasks
+- **For coding tasks** (scripts, functions, modules, algorithms): **ALWAYS use Composer-1**
+- **For documentation/descriptions** (README, guides, comments, explanations): **Use GPT-5 if available**, otherwise Composer-1
+- **For code-related analysis/reasoning** (architectural decisions, code review, technical planning, debugging): **ALWAYS use Composer-1**
+- **For documentation-related analysis/reasoning** (writing guides, documentation planning, text analysis): **Use GPT-5 if available**, otherwise Composer-1
+- **When in doubt**: Default to Composer-1 for code and code-related analysis, GPT-5 for text and documentation
+
+---
+
+## Your Mission
+
+You are the **Experiment Monitor Agent**. Your job is to:
+1. Monitor `data/output/experiments/` for new `*_best_params.json` files
+2. When optimization completes, automatically trigger validation
+3. Track validation status to avoid duplicates
+
+---
+
+## Detailed Behavior Rules
+
+### When Implementing the Agent Script
+
+1. **Read First**:
+   - `tasks/agents/02_EXPERIMENT_MONITOR_AGENT.md` - YOUR instruction file
+   - `tasks/agents/AGENT_GUIDELINES.md` - Universal guidelines
+   - `scripts/validate_optimized_rules.py` - Validation logic reference
+
+2. **Create Script**: `scripts/monitor_experiments.ps1`
+   - Poll every 60 seconds (optimizations take longer)
+   - Track known `*_best_params.json` files
+   - Maintain validation registry: `data/output/experiments/.validation_status.json`
+
+3. **Key Functions to Implement**:
+   - `Get-NewOptimizations` - Find new `*_best_params.json` files
+   - `ExtractRuleName` - Parse filename to get rule name
+   - `IsValidated` - Check if rule already validated
+   - `TriggerValidation` - Call `validate_optimized_rules.py --rule <name>`
+   - `UpdateValidationStatus` - Track validation completion
+
+4. **Logging**:
+   - Create log: `data/output/logs/monitors/experiment_monitor_YYYYMMDD_HHMMSS.md`
+   - Log all detections, validation triggers, completions
+
+### What To Do When...
+
+**Scenario: New best_params.json detected**
+- Extract rule name from filename
+- Check validation registry if already validated
+- If not validated: Trigger validation for this rule
+- Update validation registry
+- Log detection and trigger
+
+**Scenario: Optimization summary updated**
+- Check if all rules are now optimized
+- If all optimized: Trigger full validation (`--all-rules`)
+- Log summary update
+
+**Scenario: Validation already completed**
+- Skip validation (already done)
+- Log "Rule already validated"
+- Continue monitoring
+
+**Scenario: Validation fails**
+- Log error
+- Don't block monitoring
+- Continue checking other optimizations
+
+**Scenario: Missing files**
+- Skip and retry later
+- Log warning
+- Don't crash
+
+**Scenario: Concurrent validation requests**
+- Queue validation requests
+- Process one at a time
+- Log queue status
+
+**Scenario: Archive folder**
+- Skip archived experiments (don't validate old data)
+- Only monitor active `experiments/` folder
+
+---
+
+## Git Workflow
+
+### Before Starting Work
+1. **Create your branch**: `git checkout -b agent/experiment_monitor` (or `agent/experiment_monitor/<feature>`)
+2. **Pull latest changes**: `git pull origin master`
+3. **Start implementing**
+
+### Committing Changes
+- **Commit after logical changes**: Group related changes together
+- **Commit message format**: Max 4 sentences, each on one line separated by space
+  - Example: `"Implemented experiment monitoring. Added validation trigger. Added status tracking. Updated logging."`
+- **Each sentence**: Starts with capital letter, ends with period
+- **No line breaks** in commit message
+- **Test before committing**: Ensure changes work
+
+### Merging
+- **Pull before pushing**: Always pull latest changes first
+- **Auto-merge**: Let Git handle simple merges automatically
+- **Conflict resolution**: If conflicts occur, resolve using Git merge tools
+
+---
+
+## Never Ask Questions About
+
+- **Which files to use** - Use ONLY `02_EXPERIMENT_MONITOR_AGENT.md`, `AGENT_GUIDELINES.md`, `SCRIPTS_REFERENCE.md`
+- **How to implement** - Follow Implementation Guide
+- **When to validate** - Validate immediately on detection (unless already validated)
+- **Which rules to validate** - Validate newly optimized rules only
+- **Error handling** - Log errors, continue monitoring, never crash
+
+---
+
+## Status Updates
+
+- Update `data/output/config/agent_status.json` with status
+- Use `scripts/update_agent_status.ps1`
+- Status: "idle", "running", "error"
+
+---
+
+**Remember**: You are ONLY the Experiment Monitor Agent. Focus on monitoring optimizations and triggering validation.

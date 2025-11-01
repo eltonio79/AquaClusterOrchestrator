@@ -24,6 +24,22 @@ Each agent instruction file contains:
 
 ## Starting an Agent
 
+### Using the Startup Script
+
+Use `scripts/start_agent.ps1` to start agents:
+
+**Delegation Mode** (default - when agent not implemented):
+```powershell
+.\scripts\start_agent.ps1 -AgentName "raster_monitor" -Instructions "Implement and start the raster monitor agent"
+```
+
+**Direct Execution Mode** (when agent script exists):
+```powershell
+.\scripts\start_agent.ps1 -AgentName "raster_monitor" -Direct
+```
+
+### Manual Start
+
 1. Read the agent's instruction file
 2. Review integration points with existing scripts
 3. Implement the core script following the guide
@@ -54,6 +70,17 @@ Agents can work independently or coordinate:
 - Follow existing code patterns from core scripts
 - Test individually before running multiple agents
 
+## Agent Instruction Files Status
+
+**Files in `tasks/agents/*.md` are COMMITTED to Git** - They are reference material, not active task files.
+
+**Default behavior**: These files are NOT automatically processed by agents unless:
+- Explicitly mentioned in chat
+- Agent assigned to role via `.cursor/rules/`
+- Referenced in a task file (`tasks/*.json`)
+
+See `tasks/agents/GIT_WORKFLOW.md` for details about Git workflow and task system vs delegation system.
+
 ## Agent Status Tracking
 
 Track agent implementation status:
@@ -65,4 +92,26 @@ Track agent implementation status:
 ---
 
 **See individual agent files for detailed instructions.**
+
+---
+
+## Agent Status and Monitoring
+
+### Status System
+
+Agent status is tracked in `data/output/config/agent_status.json`:
+- **Update status**: `.\scripts\update_agent_status.ps1 -AgentName "raster_monitor" -Status "running" -Pid 12345`
+- **Query status**: `.\scripts\update_agent_status.ps1 -AgentName "raster_monitor" -GetStatus`
+- **List available**: `.\scripts\update_agent_status.ps1 -ListAvailable`
+
+### Monitoring Dashboard
+
+Open `temp/agent_monitor.html` in a web browser to view:
+- Agent status with green/red indicators
+- Task status with progress indicators
+- Available agents counter
+- Log viewer (select agent to view logs)
+- Auto-refresh every 5 seconds
+
+**Note**: The dashboard reads from `data/output/config/agent_status.json` and requires agents to update their status using `update_agent_status.ps1`.
 

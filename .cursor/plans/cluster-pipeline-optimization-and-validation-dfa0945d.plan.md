@@ -232,12 +232,12 @@
 
 ### To-dos
 
-- [ ] Agent 1: Uruchomić optimizer.py --all-rules dla wszystkich 6 rules, zapisać najlepsze parametry do data/output/experiments/, zaktualizować pliki .json rules
-- [ ] Agent 1: Wygenerować raport porównawczy optymalizacji (data/output/experiments/optimization_summary.md)
-- [ ] Agent 2: Uruchomić pipeline dla każdej zoptymalizowanej rule, zweryfikować quality metrics, porównać z poprzednimi wynikami
-- [ ] Agent 2: Wygenerować validation report (data/output/experiments/validation_report.md) z tabelą porównawczą i listą rules wymagających ręcznej weryfikacji
-- [ ] Agent 3: Stworzyć scripts/verify_pipeline_results.py - moduł automatycznej weryfikacji wyników pipeline (sprawdza pliki wyjściowe, metryki jakości, struktury katalogów)
-- [ ] Agent 3: Zintegrować verification w pipeline_runner.py (automatyczne uruchamianie po każdym rule), generować verification logs w data/output/logs/active/
-- [ ] Agent 4: Wykonać cleanup i organizację (przeniesienie starych logów, archiwizacja wyników eksperymentów, organizacja plików w data/output/raster/)
-- [ ] Agent 4: Zaktualizować dokumentację (README.md, stworzyć docs/OPTIMIZATION_GUIDE.md), zaktualizować paths.txt
-- [ ] Agent 4: Commit zoptymalizowanych parametrów do git z tagiem optimized-parameters
+- [x] Agent 1: Uruchomić optimizer.py --all-rules dla wszystkich 6 rules, zapisać najlepsze parametry do data/output/experiments/, zaktualizować pliki .json rules
+- [x] Agent 1: Wygenerować raport porównawczy optymalizacji (data/output/experiments/optimization_summary.md)
+- [x] Agent 2: Uruchomić pipeline dla każdej zoptymalizowanej rule, zweryfikować quality metrics, porównać z poprzednimi wynikami
+- [x] Agent 2: Wygenerować validation report (data/output/experiments/validation_report.md) z tabelą porównawczą i listą rules wymagających ręcznej weryfikacji
+- [x] Agent 3: Stworzyć scripts/verify_pipeline_results.py - moduł automatycznej weryfikacji wyników pipeline (sprawdza pliki wyjściowe, metryki jakości, struktury katalogów)
+- [x] Agent 3: Zintegrować verification w pipeline_runner.py (automatyczne uruchamianie po każdym rule), generować verification logs w data/output/logs/active/
+- [x] Agent 4: Wykonać cleanup i organizację (przeniesienie starych logów, archiwizacja wyników eksperymentów, organizacja plików w data/output/raster/)
+- [x] Agent 4: Zaktualizować dokumentację (README.md, stworzyć docs/OPTIMIZATION_GUIDE.md), zaktualizować paths.txt
+- [x] Agent 4: Commit zoptymalizowanych parametrów do git z tagiem optimized-parameters
