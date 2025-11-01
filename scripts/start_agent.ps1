@@ -118,7 +118,7 @@ if ($useDirectExecution) {
         }
         
         # Update status with PID
-        & ".\scripts\update_agent_status.ps1" -AgentName $AgentName -Status "running" -Pid $process.Id -ErrorAction SilentlyContinue
+        & ".\scripts\update_agent_status.ps1" -AgentName $AgentName -Status "running" -ProcessId $process.Id -ErrorAction SilentlyContinue
         
         Write-Host "Agent started with PID: $($process.Id)" -ForegroundColor Green
         Write-Host "Script: $agentScriptPath" -ForegroundColor Gray

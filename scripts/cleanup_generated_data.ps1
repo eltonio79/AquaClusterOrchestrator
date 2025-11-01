@@ -4,6 +4,7 @@ param(
 
 Write-Host "=== Cleanup Generated Data ===" -ForegroundColor Cyan
 Write-Host "This will delete generated outputs under data/output (except logs) and data/input." -ForegroundColor Yellow
+Write-Host "NOTE: .cursor/plans/ directory is NEVER touched - plans must be preserved in git." -ForegroundColor Gray
 
 if (-not $Yes) {
     $resp = Read-Host "Are you sure you want to remove previous generated data (rasters, viz, results, experiments, clusters, csv)? (y/N)"

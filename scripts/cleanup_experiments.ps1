@@ -39,6 +39,8 @@ $projectRoot = Get-ProjectRoot
 $experimentsPath = Join-Path (Join-Path $projectRoot "data\output") "experiments"
 $archivedPath = Join-Path $experimentsPath "archived"
 
+# NOTE: .cursor/plans/ directory is NEVER touched by cleanup scripts - plans must be preserved in git
+
 if (-not (Test-Path $experimentsPath)) {
     if (-not $Quiet) {
         Write-Host "Experiments directory does not exist: $experimentsPath" -ForegroundColor Yellow

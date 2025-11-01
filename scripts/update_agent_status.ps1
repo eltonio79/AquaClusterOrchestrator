@@ -1,6 +1,6 @@
 # Script to update and query agent status
 # Usage:
-#   Update: .\scripts\update_agent_status.ps1 -AgentName "raster_monitor" -Status "running" -Pid 12345
+#   Update: .\scripts\update_agent_status.ps1 -AgentName "raster_monitor" -Status "running" -ProcessId 12345
 #   Query:  .\scripts\update_agent_status.ps1 -AgentName "raster_monitor"
 #   List:   .\scripts\update_agent_status.ps1 -ListAvailable
 
@@ -8,7 +8,7 @@ param(
     [string]$AgentName,
     [ValidateSet("idle", "running", "error")]
     [string]$Status,
-    [int]$Pid,
+    [int]$ProcessId,
     [string]$CurrentTask,
     [string]$LogFile,
     [switch]$ListAvailable,
@@ -53,24 +53,24 @@ if (-not (Test-Path $configDir)) {
 
 # Initialize status structure if file doesn't exist
 if (-not (Test-Path $statusFile)) {
-    $status = @{
+    $statusData = @{
         agents = @{}
         tasks = @{}
         available_agents = @()
         timestamp = (Get-Date).ToString("o")
     }
-    $status | ConvertTo-Json -Depth 10 | Set-Content -Path $statusFile -Encoding UTF8
+    $statusData | ConvertTo-Json -Depth 10 | Set-Content -Path $statusFile -Encoding UTF8
 }
 
-# Load current status
-$status = Get-Content -Raw -Path $statusFile | ConvertFrom-Json
+# Load current status (using different variable name to avoid conflict with $Status parameter)
+$statusData = Get-Content -Raw -Path $statusFile | ConvertFrom-Json
 
 # List available agents
 if ($ListAvailable) {
     $available = @()
-    $status.PSObject.Properties.Name | ForEach-Object {
+    $statusData.PSObject.Properties.Name | ForEach-Object {
         if ($_ -eq "agents") {
-            $status.agents.PSObject.Properties | ForEach-Object {
+            $statusData.agents.PSObject.Properties | ForEach-Object {
                 $agentName = $_.Name
                 $agentStatus = $_.Value
                 if ($agentStatus.status -eq "idle") {
@@ -88,8 +88,8 @@ if ($ListAvailable) {
 
 # Get status for specific agent
 if ($GetStatus -and $AgentName) {
-    if ($status.agents.PSObject.Properties.Name -contains $AgentName) {
-        $agent = $status.agents.$AgentName
+    if ($statusData.agents.PSObject.Properties.Name -contains $AgentName) {
+        $agent = $statusData.agents.$AgentName
         Write-Host "Agent: $AgentName" -ForegroundColor Cyan
         Write-Host "  Status: $($agent.status)" -ForegroundColor $(switch($agent.status) { "idle" {"Green"} "running" {"Yellow"} "error" {"Red"} default {"Gray"}})
         if ($agent.last_activity) { Write-Host "  Last Activity: $($agent.last_activity)" -ForegroundColor Gray }
@@ -104,8 +104,8 @@ if ($GetStatus -and $AgentName) {
 
 # Update agent status
 if ($AgentName -and $Status) {
-    if (-not $status.agents.PSObject.Properties.Name -contains $AgentName) {
-        $status.agents | Add-Member -MemberType NoteProperty -Name $AgentName -Value @{
+    if (-not $statusData.agents.PSObject.Properties.Name -contains $AgentName) {
+        $statusData.agents | Add-Member -MemberType NoteProperty -Name $AgentName -Value @{
             status = "idle"
             last_activity = $null
             current_task = $null
@@ -114,12 +114,12 @@ if ($AgentName -and $Status) {
         }
     }
     
-    $agent = $status.agents.$AgentName
+    $agent = $statusData.agents.$AgentName
     $agent.status = $Status
     $agent.last_activity = (Get-Date).ToString("o")
     
-    if ($PSBoundParameters.ContainsKey('Pid')) {
-        $agent.pid = $Pid
+    if ($PSBoundParameters.ContainsKey('ProcessId')) {
+        $agent.pid = $ProcessId
     }
     
     if ($PSBoundParameters.ContainsKey('CurrentTask')) {
@@ -132,25 +132,25 @@ if ($AgentName -and $Status) {
     
     # Update available agents list
     $available = @()
-    $status.agents.PSObject.Properties | ForEach-Object {
+    $statusData.agents.PSObject.Properties | ForEach-Object {
         if ($_.Value.status -eq "idle") {
             $available += $_.Name
         }
     }
-    $status.available_agents = $available
+    $statusData.available_agents = $available
     
-    $status.timestamp = (Get-Date).ToString("o")
+    $statusData.timestamp = (Get-Date).ToString("o")
     
     # Save status
-    $status | ConvertTo-Json -Depth 10 | Set-Content -Path $statusFile -Encoding UTF8
+    $statusData | ConvertTo-Json -Depth 10 | Set-Content -Path $statusFile -Encoding UTF8
     
     Write-Host "Agent status updated: $AgentName = $Status" -ForegroundColor Green
 }
 
 # Update task status
 if ($PSBoundParameters.ContainsKey('TaskId') -and $PSBoundParameters.ContainsKey('TaskStatus')) {
-    if (-not $status.tasks.PSObject.Properties.Name -contains $TaskId) {
-        $status.tasks | Add-Member -MemberType NoteProperty -Name $TaskId -Value @{
+    if (-not $statusData.tasks.PSObject.Properties.Name -contains $TaskId) {
+        $statusData.tasks | Add-Member -MemberType NoteProperty -Name $TaskId -Value @{
             status = "pending"
             assigned_to = $null
             started = $null
@@ -158,7 +158,7 @@ if ($PSBoundParameters.ContainsKey('TaskId') -and $PSBoundParameters.ContainsKey
         }
     }
     
-    $task = $status.tasks.$TaskId
+    $task = $statusData.tasks.$TaskId
     $task.status = $TaskStatus
     
     if ($TaskStatus -eq "in_progress" -and -not $task.started) {
@@ -172,8 +172,8 @@ if ($PSBoundParameters.ContainsKey('TaskId') -and $PSBoundParameters.ContainsKey
         $task.completed = (Get-Date).ToString("o")
     }
     
-    $status.timestamp = (Get-Date).ToString("o")
-    $status | ConvertTo-Json -Depth 10 | Set-Content -Path $statusFile -Encoding UTF8
+    $statusData.timestamp = (Get-Date).ToString("o")
+    $statusData | ConvertTo-Json -Depth 10 | Set-Content -Path $statusFile -Encoding UTF8
     
     Write-Host "Task status updated: $TaskId = $TaskStatus" -ForegroundColor Green
 }

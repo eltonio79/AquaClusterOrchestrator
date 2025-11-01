@@ -92,13 +92,7 @@ $logHeader | Set-Content -Path $logFile -Encoding UTF8
 
 # Update agent status
 try {
-    $statusArgs = @{
-        AgentName = "cleanup"
-        Status = "running"
-        CurrentTask = "Cleanup operation"
-        LogFile = $logFile
-    }
-    & ".\scripts\update_agent_status.ps1" @statusArgs
+    & ".\scripts\update_agent_status.ps1" -AgentName "cleanup" -Status "running" -CurrentTask "Cleanup operation" -LogFile $logFile -ErrorAction SilentlyContinue
 } catch {
     Write-Log "Warning: Could not update agent status: $($_.Exception.Message)" "WARNING"
 }
@@ -135,6 +129,7 @@ try {
 }
 
 # 2. Archive old experiments
+# NOTE: .cursor/plans/ directory is NEVER touched by cleanup scripts - plans must be preserved in git
 Write-Log "`n=== Step 2: Archiving old experiments ===" "INFO"
 try {
     if ($WhatIf) {
@@ -172,6 +167,7 @@ function Remove-TempFiles {
     $removedSize = 0
     
     # Remove old wrapper scripts (temporary PowerShell wrappers)
+    # NOTE: .cursor/plans/ directory is NEVER touched by cleanup scripts - plans must be preserved
     $tempFiles = Get-ChildItem -Path $tempDir -File -ErrorAction SilentlyContinue |
         Where-Object { 
             $_.LastWriteTime -lt $cutoffDate -and 
@@ -303,12 +299,7 @@ $summaryText | Add-Content -Path $logFile -Encoding UTF8
 # Update agent status
 try {
     $finalStatus = if ($summary.Errors.Count -gt 0) { "error" } else { "idle" }
-    $statusArgs = @{
-        AgentName = "cleanup"
-        Status = $finalStatus
-        CurrentTask = $null
-    }
-    & ".\scripts\update_agent_status.ps1" @statusArgs
+    & ".\scripts\update_agent_status.ps1" -AgentName "cleanup" -Status $finalStatus -CurrentTask $null -ErrorAction SilentlyContinue
 } catch {
     Write-Log "Warning: Could not update agent status: $($_.Exception.Message)" "WARNING"
 }
