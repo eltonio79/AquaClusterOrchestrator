@@ -15,7 +15,7 @@
   ],
   "clustering": {
     "method": "kmeans",
-    "k": 6,
+    "k": 3,
     "max_iter": 300,
     "init": "k-means++",
     "random_seed": 42

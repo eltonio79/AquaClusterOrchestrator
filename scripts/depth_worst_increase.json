@@ -14,14 +14,16 @@
     "GATDUZ2D"
   ],
   "clustering": {
-    "method": "kmeans",
+    "method": "connected_components",
     "k": 6,
     "max_iter": 300,
     "init": "k-means++",
-    "random_seed": 42
+    "random_seed": 42,
+    "min_size": 25
   },
   "thresholds": {
-    "min_cluster_area": 150.0
+    "min_cluster_area": 150.0,
+    "depth_threshold": 0.005
   },
   "visualization": {
     "palette": "Spectral",
