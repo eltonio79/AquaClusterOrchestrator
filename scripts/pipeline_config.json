@@ -1,13 +1,13 @@
 ﻿{
-    "model_path":  "C:\\Users\\brodowm\\OneDrive - Autodesk\\Shared\\Dev\\Git\\AquaClusterOrchestrator\\models\\standalone\\Ruby_Hackathon_Medium_2D_Model\\Ruby_Hackathon_Medium_2D_Model.icmm",
-    "data_dir":  "data/output",
-    "icm_exchange":  "output/ICM_Release.x64/ICMExchange.exe",
-    "run_simulations":  false,
-    "monitor_mode":  false,
-    "disable_git":  true,
-    "export_csv":  true,
-    "csv_selection":  null,
-    "clusters_group_name":  "Clusters",
-    "source_group_name":  "2D Demo - 2d rain",
-    "source_network_name":  "5k"
+  "model_path": ".\\models\\standalone\\Ruby_Hackathon_Medium_2D_Model\\Ruby_Hackathon_Medium_2D_Model.icmm",
+  "data_dir": "data/output",
+  "icm_exchange": "output/ICM_Release.x64/ICMExchange.exe",
+  "run_simulations": false,
+  "monitor_mode": false,
+  "disable_git": true,
+  "export_csv": true,
+  "csv_selection": null,
+  "clusters_group_name": "Clusters",
+  "source_group_name": "2D Demo - 2d rain",
+  "source_network_name": "5k"
 }
