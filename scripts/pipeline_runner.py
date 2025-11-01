@@ -21,6 +21,7 @@ from cluster_processor import ClusterProcessor
 from visualizer import RasterVisualizer, VisualizationConfig
 from exporter import CombinedExporter
 from verify_pipeline_results import PipelineVerifier
+from crash_recovery import CrashRecovery, SafeErrorLogger
 
 
 class PipelineRunner:
@@ -669,8 +670,18 @@ def main():
             if manifest.get('summary_report'):
                 print(f"  Summary report: {manifest['summary_report']}")
     
+    except KeyboardInterrupt:
+        print("\n\nInterrupted by user. Progress saved.")
+        sys.exit(130)
+    
     except Exception as e:
+        error_logger = SafeErrorLogger()
+        error_logger.log_crash('pipeline_runner_main',
+                             f"{type(e).__name__}: {str(e)}",
+                             {'args': str(vars(args)) if 'args' in locals() else 'unknown'})
         print(f"Pipeline failed: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 

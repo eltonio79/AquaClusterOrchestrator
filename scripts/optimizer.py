@@ -16,10 +16,12 @@ from dataclasses import dataclass, asdict
 from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 from sklearn.cluster import KMeans, DBSCAN
 import itertools
+import sys
 
 from rule_parser import RuleParser, RuleConfig
 from cluster_processor import ClusterProcessor, AnalysisResult
 from pipeline_runner import PipelineRunner
+from crash_recovery import CrashRecovery, SafeErrorLogger, safe_execute
 
 
 @dataclass
@@ -602,9 +604,16 @@ class PipelineOptimizer:
         
         optimization_results = {}
         
+        crash_recovery = CrashRecovery()
+        error_logger = SafeErrorLogger()
+        
         for rule_config in rules:
             try:
                 self.logger.info(f"Optimizing rule: {rule_config.name}")
+                
+                # Save progress
+                completed = [r for r in optimization_results.keys() if 'error' not in optimization_results.get(r, {})]
+                crash_recovery.save_progress('optimizer', completed, rule_config.name)
                 
                 # Run optimization
                 experiment_results = self.parameter_optimizer.optimize_rule(rule_config, opt_params)
@@ -634,12 +643,24 @@ class PipelineOptimizer:
                 self.logger.info(f"Completed optimization for rule: {rule_config.name}")
                 
             except Exception as e:
-                self.logger.error(f"Error optimizing rule {rule_config.name}: {e}")
+                error_msg = str(e)
+                self.logger.error(f"Error optimizing rule {rule_config.name}: {error_msg}")
+                error_logger.log_error('optimizer', e, {
+                    'rule_name': rule_config.name,
+                    'operation': 'optimize_rule'
+                })
                 optimization_results[rule_config.name] = {
-                    'error': str(e),
+                    'error': error_msg,
                     'best_parameters': {},
                     'total_experiments': 0
                 }
+                
+                # Save error progress
+                errors = [r for r in optimization_results.keys() if 'error' in optimization_results.get(r, {})]
+                crash_recovery.save_progress('optimizer', 
+                                            [r for r in optimization_results.keys() if 'error' not in optimization_results.get(r, {})],
+                                            None,
+                                            errors)
         
         # Generate summary report
         summary_file = self.generate_optimization_summary(optimization_results)
@@ -700,10 +721,25 @@ def main():
     # Set up optimization parameters
     opt_params = OptimizationParams()
     
+    crash_recovery = CrashRecovery()
+    error_logger = SafeErrorLogger()
+    
     try:
         if args.all_rules:
-            # Optimize all rules
-            results = optimizer.optimize_all_rules(opt_params)
+            # Optimize all rules with crash protection
+            def run_optimization():
+                return optimizer.optimize_all_rules(opt_params)
+            
+            try:
+                results = safe_execute('optimizer_all_rules', run_optimization, 
+                                     crash_recovery=crash_recovery, 
+                                     error_logger=error_logger)
+            except Exception as e:
+                error_logger.log_crash('optimizer_all_rules', 
+                                     f"{type(e).__name__}: {str(e)}", 
+                                     {'traceback': str(e)})
+                raise
+            
             print(f"Optimized {len(results)} rules")
             
             # Generate summary is already done in optimize_all_rules
@@ -713,21 +749,33 @@ def main():
             for rule_name, result in results.items():
                 print(f"\n{rule_name}:")
                 if 'error' in result:
-                    print(f"  ❌ Error: {result['error']}")
+                    print(f"  [X] Error: {result['error']}")
                 else:
-                    print(f"  ✅ Success")
+                    print(f"  [OK] Success")
                     print(f"  Best params file: {result.get('best_params_file', 'N/A')}")
                     print(f"  Rule JSON updated: {result.get('rule_json_updated', False)}")
                     print(f"  Total experiments: {result.get('total_experiments', 0)}")
         
         elif args.rule:
-            # Optimize single rule
-            result = optimizer.optimize_single_rule(args.rule, opt_params)
+            # Optimize single rule with crash protection
+            def run_single_optimization():
+                return optimizer.optimize_single_rule(args.rule, opt_params)
+            
+            try:
+                result = safe_execute(f'optimizer_{args.rule}', run_single_optimization,
+                                    crash_recovery=crash_recovery,
+                                    error_logger=error_logger)
+            except Exception as e:
+                error_logger.log_crash(f'optimizer_{args.rule}',
+                                     f"{type(e).__name__}: {str(e)}",
+                                     {'rule': args.rule})
+                raise
+            
             print(f"Optimization result for {args.rule}:")
             if 'error' in result:
-                print(f"  ❌ Error: {result['error']}")
+                print(f"  [X] Error: {result['error']}")
             else:
-                print(f"  ✅ Success")
+                print(f"  [OK] Success")
                 print(f"  Best parameters: {result.get('best_parameters', {})}")
                 print(f"  Total experiments: {result.get('total_experiments', 0)}")
                 
@@ -740,10 +788,19 @@ def main():
         else:
             print("Please specify --rule <rule_name> or --all-rules")
     
+    except KeyboardInterrupt:
+        print("\n\nInterrupted by user. Progress saved.")
+        sys.exit(130)  # Standard exit code for Ctrl+C
+    
     except Exception as e:
-        print(f"Optimization failed: {e}")
+        error_msg = f"Optimization failed: {e}"
+        print(error_msg)
+        error_logger.log_crash('optimizer_main', 
+                             f"{type(e).__name__}: {str(e)}",
+                             {'args': str(vars(args))})
         import traceback
         traceback.print_exc()
+        sys.exit(1)
 
 
 if __name__ == "__main__":

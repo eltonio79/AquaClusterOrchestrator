@@ -18,6 +18,8 @@ from pipeline_runner import PipelineRunner
 from rule_parser import RuleParser
 from compare_runs import RunComparator
 from verify_pipeline_results import PipelineVerifier
+from crash_recovery import CrashRecovery, SafeErrorLogger, safe_execute
+import sys
 
 
 class OptimizedRuleValidator:
@@ -462,11 +464,24 @@ def main():
     
     # Initialize validator
     validator = OptimizedRuleValidator(args.scripts_dir, args.data_dir)
+    crash_recovery = CrashRecovery()
+    error_logger = SafeErrorLogger()
     
     try:
         if args.all_rules:
-            # Validate all rules
-            validation_results = validator.validate_all_optimized_rules(export_rasters=args.export_rasters)
+            # Validate all rules with crash protection
+            def run_validation():
+                return validator.validate_all_optimized_rules(export_rasters=args.export_rasters)
+            
+            try:
+                validation_results = safe_execute('validator_all_rules', run_validation,
+                                                 crash_recovery=crash_recovery,
+                                                 error_logger=error_logger)
+            except Exception as e:
+                error_logger.log_crash('validator_all_rules',
+                                     f"{type(e).__name__}: {str(e)}",
+                                     {'traceback': str(e)})
+                raise
             
             # Generate report
             report_file = validator.generate_validation_report(validation_results)
@@ -474,20 +489,31 @@ def main():
             print(f"\nValidation Summary:")
             summary = validation_results.get('summary', {})
             print(f"  Total: {validation_results.get('total_rules', 0)}")
-            print(f"  ✅ Passed: {summary.get('passed', 0)}")
-            print(f"  ✅ Improved: {summary.get('improved', 0)}")
-            print(f"  ❌ Failed: {summary.get('failed', 0)}")
-            print(f"  📉 Regression: {summary.get('regression', 0)}")
-            print(f"  ⚠️ Errors: {summary.get('errors', 0)}")
+            print(f"  [OK] Passed: {summary.get('passed', 0)}")
+            print(f"  [OK] Improved: {summary.get('improved', 0)}")
+            print(f"  [X] Failed: {summary.get('failed', 0)}")
+            print(f"  [DOWN] Regression: {summary.get('regression', 0)}")
+            print(f"  [!] Errors: {summary.get('errors', 0)}")
             print(f"\nReport: {report_file}")
         
         elif args.rule:
-            # Validate single rule
-            result = validator.validate_single_rule(args.rule, export_rasters=args.export_rasters)
+            # Validate single rule with crash protection
+            def run_single_validation():
+                return validator.validate_single_rule(args.rule, export_rasters=args.export_rasters)
+            
+            try:
+                result = safe_execute(f'validator_{args.rule}', run_single_validation,
+                                    crash_recovery=crash_recovery,
+                                    error_logger=error_logger)
+            except Exception as e:
+                error_logger.log_crash(f'validator_{args.rule}',
+                                     f"{type(e).__name__}: {str(e)}",
+                                     {'rule': args.rule})
+                raise
             
             print(f"\nValidation Result for {args.rule}:")
             print(f"  Status: {result.get('status', 'unknown')}")
-            print(f"  Quality Check: {'✅' if result.get('quality_check_passed', False) else '❌'}")
+            print(f"  Quality Check: {'[OK]' if result.get('quality_check_passed', False) else '[X]'}")
             
             issues = result.get('issues', [])
             if issues:
@@ -498,11 +524,19 @@ def main():
         else:
             print("Please specify --rule <rule_name> or --all-rules")
     
+    except KeyboardInterrupt:
+        print("\n\nInterrupted by user. Progress saved.")
+        sys.exit(130)
+    
     except Exception as e:
-        print(f"Validation failed: {e}")
+        error_msg = f"Validation failed: {e}"
+        print(error_msg)
+        error_logger.log_crash('validator_main',
+                             f"{type(e).__name__}: {str(e)}",
+                             {'args': str(vars(args))})
         import traceback
         traceback.print_exc()
-        exit(1)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
