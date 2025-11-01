@@ -110,10 +110,24 @@ try {
     if ($Rules) { $argsList += @('--rules'); $argsList += $Rules }
     if ($NoExport) { $argsList += '--no-export' }
     if ($ModelPath -and (Test-Path $ModelPath)) {
+        # Ensure absolute path for model path to avoid issues
+        if (-not ([System.IO.Path]::IsPathRooted($finalModelPath))) {
+            $finalModelPath = (Resolve-Path $finalModelPath).Path
+        }
         $argsList += @('--model-path', $finalModelPath)
     }
     if ($SkipModelWait) {
         $argsList += '--skip-model-wait'
+    }
+    # Ensure absolute paths for directories
+    if (-not ([System.IO.Path]::IsPathRooted($scriptsDir))) {
+        $scriptsDir = (Resolve-Path $scriptsDir).Path
+    }
+    if (-not ([System.IO.Path]::IsPathRooted($dataDir))) {
+        $dataDir = (Resolve-Path $dataDir).Path
+    }
+    if (-not ([System.IO.Path]::IsPathRooted($iexPath))) {
+        $iexPath = (Resolve-Path $iexPath).Path
     }
     $argsList += @('--scripts-dir', $scriptsDir, '--data-dir', $dataDir, '--icm-exchange', $iexPath)
 
@@ -131,12 +145,21 @@ try {
     $stdoutFile = $absMdLog + ".stdout.tmp"
     $stderrFile = $absMdLog + ".stderr.tmp"
     
-    # Build arguments array string for PowerShell wrapper
-    $argsListForScript = $argsList | ForEach-Object {
-        $escaped = $_ -replace "'", "''"
-        "'$escaped'"
+    # Build command line string for cmd.exe to handle spaces properly
+    $allArgs = @('scripts\pipeline_runner.py') + $argsList
+    # Escape each argument for cmd.exe - arguments with spaces need double quotes
+    $cmdArgs = $allArgs | ForEach-Object {
+        $arg = $_
+        # If argument contains spaces, wrap in double quotes and escape internal quotes
+        if ($arg -match ' ') {
+            $escaped = $arg -replace '"', '""'
+            "`"$escaped`""
+        } else {
+            $arg
+        }
     }
-    $argsArrayStr = "@(" + ($argsListForScript -join ', ') + ")"
+    $cmdLine = ($cmdArgs -join ' ')
+    $cmdLineEscaped = $cmdLine -replace "'", "''"
     
     $wrapperContent = @"
 Set-Location '$projectRoot'
@@ -146,8 +169,9 @@ try {
     "## Python stdout" | Out-File -FilePath '$absMdLog' -Append -Encoding UTF8
     '```log' | Out-File -FilePath '$absMdLog' -Append -Encoding UTF8
     
-    `$pyArgs = $argsArrayStr
-    `$proc = Start-Process -FilePath 'python' -ArgumentList @('scripts\pipeline_runner.py') + `$pyArgs -WorkingDirectory '$projectRoot' -NoNewWindow -PassThru -RedirectStandardOutput '$stdoutFile' -RedirectStandardError '$stderrFile' -Wait
+    # Use cmd.exe to properly handle arguments with spaces
+    `$cmdLine = '$cmdLineEscaped'
+    `$proc = Start-Process -FilePath 'cmd.exe' -ArgumentList "/c", "python `$cmdLine" -WorkingDirectory '$projectRoot' -NoNewWindow -PassThru -RedirectStandardOutput '$stdoutFile' -RedirectStandardError '$stderrFile' -Wait
     
     Get-Content '$stdoutFile' -ErrorAction SilentlyContinue | Out-File -FilePath '$absMdLog' -Append -Encoding UTF8
     '```' | Out-File -FilePath '$absMdLog' -Append -Encoding UTF8

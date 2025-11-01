@@ -99,6 +99,7 @@ class RasterProcessor:
         Searches structured layout first, then legacy paths.
         
         New structure: data/output/raster/<db>/<group>/<run>/sim_<id>
+        Model structure: data/output/raster/<model>/<run>/sim_<id>
         Old structure: data/output/<db>/<group>/<run>/rasters/sim_<id>
         Legacy: data/output/rasters/sim_<id>
         """
@@ -111,17 +112,31 @@ class RasterProcessor:
                 dbp = os.path.join(raster_root, db)
                 if not os.path.isdir(dbp):
                     continue
-                for grp in os.listdir(dbp):
-                    grpp = os.path.join(dbp, grp)
+                # Check if this is model/run structure (2 levels: model/run/sim_X)
+                # or db/group/run structure (3 levels: db/group/run/sim_X)
+                sim_dir_2level = os.path.join(dbp, f"sim_{sim_id}")
+                if os.path.isdir(sim_dir_2level):
+                    # Model structure: <model>/sim_<id>
+                    candidate_dirs.append(sim_dir_2level)
+                
+                # Check for run subdirectory (model/run/sim_X or db/group/run/sim_X)
+                for grp_or_run in os.listdir(dbp):
+                    grpp = os.path.join(dbp, grp_or_run)
                     if not os.path.isdir(grpp):
                         continue
+                    # Check for sim_X directly under run (model/run/sim_X structure)
+                    sim_dir_3level = os.path.join(grpp, f"sim_{sim_id}")
+                    if os.path.isdir(sim_dir_3level):
+                        candidate_dirs.append(sim_dir_3level)
+                    
+                    # Check for nested run structure (db/group/run/sim_X)
                     for run in os.listdir(grpp):
                         runp = os.path.join(grpp, run)
                         if not os.path.isdir(runp):
                             continue
-                        sim_dir = os.path.join(runp, f"sim_{sim_id}")
-                        if os.path.isdir(sim_dir):
-                            candidate_dirs.append(sim_dir)
+                        sim_dir_4level = os.path.join(runp, f"sim_{sim_id}")
+                        if os.path.isdir(sim_dir_4level):
+                            candidate_dirs.append(sim_dir_4level)
         
         # Old structured: data/output/<db>/<group>/<run>/rasters/sim_<id>
         structured_root = os.path.join(self.data_dir)
