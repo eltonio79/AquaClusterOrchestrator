@@ -248,17 +248,32 @@ class RasterVisualizer:
     
     def _find_base_raster(self, rule_name: str) -> Optional[str]:
         """Find a base raster file for overlay visualization."""
-        # Look for raster files in the data directory
-        raster_dir = os.path.join("data/output/rasters")
-        if not os.path.exists(raster_dir):
-            return None
-        
-        # Look for any .tif file that might be suitable as base
-        for root, dirs, files in os.walk(raster_dir):
-            for file in files:
-                if file.endswith('.tif'):
-                    return os.path.join(root, file)
-        
+        # Search structured first: data/output/<db>/<group>/<run>/rasters/sim_*/
+        search_roots = []
+        base = os.path.join("data", "output")
+        if os.path.exists(base):
+            for db in os.listdir(base):
+                dbp = os.path.join(base, db)
+                if not os.path.isdir(dbp):
+                    continue
+                for grp in os.listdir(dbp):
+                    grpp = os.path.join(dbp, grp)
+                    if not os.path.isdir(grpp):
+                        continue
+                    for run in os.listdir(grpp):
+                        runp = os.path.join(grpp, run, "rasters")
+                        if os.path.isdir(runp):
+                            search_roots.append(runp)
+        # Legacy location
+        legacy = os.path.join("data", "output", "rasters")
+        if os.path.isdir(legacy):
+            search_roots.append(legacy)
+
+        for root_dir in search_roots:
+            for root, _, files in os.walk(root_dir):
+                for file in files:
+                    if file.endswith('.tif'):
+                        return os.path.join(root, file)
         return None
     
     def _plot_base_raster(self, ax, raster_path: str, raster_info: Dict[str, Any]) -> None:

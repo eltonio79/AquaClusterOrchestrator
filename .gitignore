@@ -33,6 +33,7 @@ Thumbs.db
 *.tmp
 *.bak
 *.cache
+temp/
 
 # Large generated files
 *.dat

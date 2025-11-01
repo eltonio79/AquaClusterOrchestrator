@@ -26,10 +26,16 @@ def read_config_model_path
   begin
     cfg_path = File.join('scripts', 'pipeline_config.json')
     if File.exist?(cfg_path)
+      # Read as binary first, then convert to UTF-8
       raw = File.open(cfg_path, 'rb') { |f| f.read }
-      raw = raw.sub(/^\xEF\xBB\xBF/, '')
-      cfg = JSON.parse(raw.force_encoding('UTF-8'))
-      return cfg['model_path'] if cfg && cfg['model_path'] && !cfg['model_path'].empty?
+      # Remove BOM if present (as bytes, not regex)
+      raw = raw.bytes[0,3] == [0xEF, 0xBB, 0xBF] ? raw.byteslice(3..-1) : raw
+      # Force UTF-8 encoding
+      raw = raw.force_encoding('UTF-8')
+      # Clean invalid UTF-8 sequences
+      raw = raw.scan(/./mu).join
+      cfg = JSON.parse(raw)
+      return cfg['model_path'] if cfg && cfg['model_path'] && cfg['model_path'].to_s.strip.length > 0
     end
   rescue => e
     puts "Warning: Could not read config: #{e.message}"
@@ -37,12 +43,43 @@ def read_config_model_path
   nil
 end
 
+def is_absolute_path?(path)
+  # Check if path is already absolute (Windows: starts with drive letter, Unix: starts with /)
+  path.nil? ? false : (path.match?(/^[A-Za-z]:\\|^\/|^\\\\/) rescue false)
+end
+
 puts "Exporting simulation #{simulation_id} to #{output_directory}"
 puts "Attributes: #{attributes.join(', ')}"
 
 # Open the database and get the simulation object
 begin
-  model_path = model_path_arg || read_config_model_path || "models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm"
+  # Try model_path_arg first, then config, then default location
+  model_path = model_path_arg || read_config_model_path
+  if model_path.nil? || model_path.empty?
+    # Try common locations
+    candidates = [
+      "models/standalone/Ruby_Hackathon_Medium_2D_Model.icmm",
+      "models/standalone/Medium 2D/Ruby_Hackathon_Medium_2D_Model.icmm",
+      "models\\standalone\\Ruby_Hackathon_Medium_2D_Model.icmm"
+    ]
+    model_path = nil
+    candidates.each do |cand|
+      if File.exist?(cand)
+        model_path = cand
+        break
+      end
+    end
+  end
+  
+  if model_path.nil? || model_path.empty?
+    puts "ERROR: Could not find model file. Please provide model_path in config or as argument."
+    exit 1
+  end
+  
+  # Convert to absolute path if not already absolute
+  model_path = File.absolute_path(model_path) unless is_absolute_path?(model_path)
+  
+  puts "Opening model: #{model_path}"
   database = WSApplication.open(model_path)
   
   model = database.model_object_from_type_and_id('Sim', simulation_id)

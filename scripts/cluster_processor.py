@@ -95,12 +95,63 @@ class RasterProcessor:
             raise
     
     def get_raster_files(self, sim_id: int, attributes: List[str]) -> Dict[str, str]:
-        """Get paths to raster files for a simulation and attributes."""
-        raster_dir = os.path.join(self.data_dir, "rasters", f"sim_{sim_id}")
-        files = {}
+        """Get paths to raster files for a simulation and attributes.
+        Searches structured layout first, then legacy paths.
         
-        if not os.path.exists(raster_dir):
-            raise FileNotFoundError(f"Raster directory not found: {raster_dir}")
+        New structure: data/output/raster/<db>/<group>/<run>/sim_<id>
+        Old structure: data/output/<db>/<group>/<run>/rasters/sim_<id>
+        Legacy: data/output/rasters/sim_<id>
+        """
+        candidate_dirs = []
+        
+        # New structure: data/output/raster/<db>/<group>/<run>/sim_<id>
+        raster_root = os.path.join(self.data_dir, "raster")
+        if os.path.isdir(raster_root):
+            for db in os.listdir(raster_root):
+                dbp = os.path.join(raster_root, db)
+                if not os.path.isdir(dbp):
+                    continue
+                for grp in os.listdir(dbp):
+                    grpp = os.path.join(dbp, grp)
+                    if not os.path.isdir(grpp):
+                        continue
+                    for run in os.listdir(grpp):
+                        runp = os.path.join(grpp, run)
+                        if not os.path.isdir(runp):
+                            continue
+                        sim_dir = os.path.join(runp, f"sim_{sim_id}")
+                        if os.path.isdir(sim_dir):
+                            candidate_dirs.append(sim_dir)
+        
+        # Old structured: data/output/<db>/<group>/<run>/rasters/sim_<id>
+        structured_root = os.path.join(self.data_dir)
+        if os.path.isdir(structured_root):
+            for db in os.listdir(structured_root):
+                dbp = os.path.join(structured_root, db)
+                if not os.path.isdir(dbp) or db == "raster":
+                    continue
+                for grp in os.listdir(dbp):
+                    grpp = os.path.join(dbp, grp)
+                    if not os.path.isdir(grpp):
+                        continue
+                    for run in os.listdir(grpp):
+                        sim_dir = os.path.join(grpp, run, "rasters", f"sim_{sim_id}")
+                        if os.path.isdir(sim_dir):
+                            candidate_dirs.append(sim_dir)
+        
+        # Legacy: data/output/rasters/sim_<id>
+        legacy_dir = os.path.join(self.data_dir, "rasters", f"sim_{sim_id}")
+        if os.path.isdir(legacy_dir):
+            candidate_dirs.append(legacy_dir)
+
+        # Pick first existing
+        raster_dir = None
+        for d in candidate_dirs:
+            raster_dir = d
+            break
+        if raster_dir is None:
+            raise FileNotFoundError(f"Raster directory not found for sim {sim_id} under structured or legacy locations")
+        files = {}
         
         for attr in attributes:
             # Look for files matching the attribute pattern

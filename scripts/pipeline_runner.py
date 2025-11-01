@@ -29,11 +29,20 @@ class PipelineRunner:
                  scripts_dir: str = "scripts",
                  data_dir: str = "data/output",
                  icm_exchange_path: str = "output/ICM_Release.x64/ICMExchange.exe",
-                 run_simulations: bool = False):
+                 run_simulations: bool = False,
+                 monitor_mode: bool = False,
+                 disable_git: bool = False):
         self.scripts_dir = scripts_dir
         self.data_dir = data_dir
         self.icm_exchange_path = icm_exchange_path
         self.run_simulations = run_simulations
+        self.monitor_mode = monitor_mode
+        self.disable_git = disable_git
+        
+        # Determine project root - parent directory of scripts_dir
+        # If scripts_dir is relative, resolve from current working directory
+        scripts_abs = os.path.abspath(scripts_dir)
+        self.project_root = os.path.dirname(scripts_abs) if os.path.basename(scripts_abs) == 'scripts' else os.path.abspath('.')
         
         # Initialize components
         self.rule_parser = RuleParser(scripts_dir)
@@ -44,8 +53,8 @@ class PipelineRunner:
         # Set up logging
         self.logger = self._setup_logging()
 
-        # Markdown log setup
-        logs_dir = os.path.join(self.data_dir, "logs")
+        # Markdown log setup - use active folder for running pipelines
+        logs_dir = os.path.join(self.data_dir, "logs", "active")
         os.makedirs(logs_dir, exist_ok=True)
         self.md_log_path = os.path.join(logs_dir, f"pipeline_run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md")
         self._md_init()
@@ -62,7 +71,7 @@ class PipelineRunner:
     
     def _setup_logging(self) -> logging.Logger:
         """Set up logging for the pipeline."""
-        log_dir = os.path.join(self.data_dir, "logs")
+        log_dir = os.path.join(self.data_dir, "logs", "active")
         os.makedirs(log_dir, exist_ok=True)
         
         # Create logger
@@ -97,6 +106,67 @@ class PipelineRunner:
     def _md_init(self) -> None:
         self._md_write(f"# Cluster Analysis Pipeline Run")
         self._md_write("")
+
+        # Load pipeline config for naming
+        self._cfg = {}
+        try:
+            cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+            if os.path.exists(cfg_path):
+                with open(cfg_path, 'r', encoding='utf-8-sig') as f:
+                    self._cfg = json.load(f)
+        except Exception as e:
+            self.logger.warning(f"Could not load pipeline_config.json for naming: {e}")
+    def _database_name(self) -> str:
+        mp = self._cfg.get('model_path') or ''
+        try:
+            base = os.path.splitext(os.path.basename(mp))[0]
+            return base or 'database'
+        except Exception:
+            return 'database'
+
+    def _group_name(self) -> str:
+        name = (self._cfg.get('source_group_name') or self._cfg.get('clusters_group_name') or '').strip()
+        if name:
+            return name
+        return self._ensure_ungrouped_group()
+
+    def _ensure_ungrouped_group(self) -> str:
+        """Ensure an Ungrouped_XX folder exists for models with no group, per database.
+        Picks the next available Ungrouped_01, Ungrouped_02, ... under data/output/<db>.
+        """
+        db = self._database_name()
+        db_root = os.path.join(self.data_dir, db)
+        os.makedirs(db_root, exist_ok=True)
+        prefix = 'Ungrouped_'
+        existing = set()
+        try:
+            for entry in os.listdir(db_root):
+                p = os.path.join(db_root, entry)
+                if os.path.isdir(p) and entry.startswith(prefix):
+                    existing.add(entry)
+        except Exception:
+            pass
+        idx = 1
+        while True:
+            candidate = f"{prefix}{idx:02d}"
+            if candidate not in existing:
+                try:
+                    os.makedirs(os.path.join(db_root, candidate), exist_ok=True)
+                except Exception:
+                    # Best-effort creation; even if it fails, return the name
+                    pass
+                return candidate
+            idx += 1
+
+    def _run_name_for_sim(self, sim_id: int) -> str:
+        # If we don't have the run name, fall back to sim_<id>
+        return f"sim_{sim_id}"
+
+    def _structured_root(self, sim_id: Optional[int] = None) -> str:
+        parts = [self.data_dir, self._database_name(), self._group_name()]
+        if sim_id is not None:
+            parts.append(self._run_name_for_sim(sim_id))
+        return os.path.join(*parts)
         self._md_write(f"- Start: {datetime.now().isoformat()}")
         self._md_write(f"- Data dir: `{self.data_dir}`")
         self._md_write(f"- Scripts dir: `{self.scripts_dir}`")
@@ -119,6 +189,7 @@ class PipelineRunner:
             
             result = subprocess.run(
                 cmd,
+                cwd=self.project_root,
                 capture_output=True,
                 text=True
             )
@@ -144,7 +215,7 @@ class PipelineRunner:
             if selection_json:
                 cmd.append(selection_json)
             self.logger.info(f"Running CSV export: {' '.join(cmd)}")
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, cwd=self.project_root, capture_output=True, text=True)
             if result.returncode == 0:
                 if result.stdout.strip():
                     self.logger.info(result.stdout)
@@ -165,6 +236,7 @@ class PipelineRunner:
             
             result = subprocess.run(
                 cmd,
+                cwd=self.project_root,
                 capture_output=True,
                 text=True
             )
@@ -261,8 +333,13 @@ class PipelineRunner:
                     sim_ids = [rule_config.baseline_id or 1]
                 
                 # Export rasters for each simulation
+                # Use raster/db/grupa/run/sim_<id> structure (instead of data_dir/db/grupa/run/rasters)
                 for sim_id in sim_ids:
-                    output_dir = os.path.join(self.data_dir, "rasters", f"sim_{sim_id}")
+                    # Build raster path: raster/db/grupa/run/sim_<id>
+                    # Note: _run_name_for_sim already returns sim_<id>, so we use it directly
+                    run_name = self._run_name_for_sim(sim_id)
+                    raster_parts = ["raster", self._database_name(), self._group_name(), run_name]
+                    output_dir = os.path.join(self.data_dir, *raster_parts)
                     os.makedirs(output_dir, exist_ok=True)
                     
                     success = self.run_ruby_export(sim_id, rule_config.attributes, output_dir)
@@ -295,6 +372,12 @@ class PipelineRunner:
                             self._md_write(f"- CSV export failed for simulation {sim_id}")
             except Exception as e:
                 self.logger.warning(f"CSV export step skipped due to error: {e}")
+
+            # Re-point outputs to structured layout per first sim (or None)
+            target_sim = (sim_ids[0] if 'sim_ids' in locals() and sim_ids else None)
+            structured_root = self._structured_root(target_sim)
+            self.visualizer = RasterVisualizer(os.path.join(structured_root, "viz"))
+            self.exporter = CombinedExporter(os.path.join(structured_root, "results"))
 
             # Process the rule
             result = self.cluster_processor.process_rule(rule_config)
@@ -400,8 +483,10 @@ class PipelineRunner:
                 'total_clusters': sum(len(r.clusters) for r in self.results)
             }
             
-            # Save manifest
-            manifest_path = os.path.join(self.data_dir, f"run_manifest_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+            # Save manifest - use config/active folder for active runs
+            config_dir = os.path.join(self.data_dir, "config", "active")
+            os.makedirs(config_dir, exist_ok=True)
+            manifest_path = os.path.join(config_dir, f"run_manifest_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
             with open(manifest_path, 'w', encoding='utf-8') as f:
                 json.dump(self.run_manifest, f, indent=2)
             
@@ -453,6 +538,14 @@ def main():
                        help='Path to ICMExchange executable')
     parser.add_argument('--run-simulations', action='store_true',
                        help='Enable automatic simulation runs (default: disabled)')
+    parser.add_argument('--monitor-mode', action='store_true',
+                       help='Enable monitor/agent mode to wait for incoming data')
+    parser.add_argument('--disable-git', action='store_true',
+                       help='Disable any git-related operations (demo mode)')
+    parser.add_argument('--model-path', type=str,
+                       help='Path to .icmm model file (bypasses waiting for model)')
+    parser.add_argument('--skip-model-wait', action='store_true',
+                       help='Skip waiting for model in standalone folder')
     
     args = parser.parse_args()
     
@@ -465,6 +558,16 @@ def main():
                 cfg = json.load(f)
                 if not args.run_simulations:
                     run_sims = cfg.get('run_simulations', False)
+                if not args.monitor_mode:
+                    args.monitor_mode = cfg.get('monitor_mode', False)
+                if not args.disable_git:
+                    args.disable_git = cfg.get('disable_git', False)
+                # Update model_path if provided via argument
+                if args.model_path:
+                    cfg['model_path'] = args.model_path
+                    # Save updated config
+                    with open(cfg_path, 'w', encoding='utf-8-sig') as f:
+                        json.dump(cfg, f, indent=2, ensure_ascii=False)
     except Exception as e:
         logging.warning(f"Could not load config: {e}")
     
@@ -473,7 +576,9 @@ def main():
         scripts_dir=args.scripts_dir,
         data_dir=args.data_dir,
         icm_exchange_path=args.icm_exchange,
-        run_simulations=run_sims
+        run_simulations=run_sims,
+        monitor_mode=args.monitor_mode,
+        disable_git=args.disable_git
     )
     
     try:
@@ -486,7 +591,28 @@ def main():
         else:
             # Run pipeline
             export_rasters = not args.no_export
-            manifest = runner.run_pipeline(args.rules, export_rasters)
+            if args.monitor_mode:
+                # Simple polling monitor: wait for new rasters then process existing data
+                print("Monitor mode: waiting for incoming rasters (.tif) ... Press Ctrl+C to exit.")
+                last_seen = 0
+                try:
+                    while True:
+                        newest = 0
+                        for root, _, files in os.walk(os.path.join(args.data_dir, 'rasters')):
+                            for fn in files:
+                                if fn.endswith('.tif'):
+                                    ts = os.path.getmtime(os.path.join(root, fn))
+                                    newest = max(newest, ts)
+                        if newest > last_seen:
+                            last_seen = newest
+                            manifest = runner.run_pipeline(args.rules, export_rasters=False)
+                            print("Processed after new rasters arrival.")
+                        time.sleep(5)
+                except KeyboardInterrupt:
+                    print("Exiting monitor mode.")
+                    return
+            else:
+                manifest = runner.run_pipeline(args.rules, export_rasters)
             
             print("\nPipeline Results:")
             print(f"  Rules processed: {manifest['statistics']['successful_rules']}/{manifest['statistics']['total_rules']}")
