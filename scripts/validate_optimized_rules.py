@@ -31,7 +31,18 @@ class OptimizedRuleValidator:
         self.scripts_dir = scripts_dir
         self.data_dir = data_dir
         self.experiments_dir = os.path.join(data_dir, "experiments")
-        self.rule_parser = RuleParser(scripts_dir)
+        
+        # Determine rules directory - assume data/input/rules relative to data_dir
+        data_dir_abs = os.path.abspath(data_dir)
+        data_parent = os.path.dirname(data_dir_abs)
+        self.rules_dir = os.path.join(data_parent, "input", "rules")
+        if not os.path.exists(self.rules_dir):
+            # Fallback: try data/input/rules relative to project root
+            scripts_abs = os.path.abspath(scripts_dir)
+            project_root = os.path.dirname(scripts_abs) if os.path.basename(scripts_abs) == 'scripts' else os.path.abspath('.')
+            self.rules_dir = os.path.join(project_root, "data", "input", "rules")
+        
+        self.rule_parser = RuleParser(self.rules_dir)
         self.comparator = RunComparator(data_dir)
         self.verifier = PipelineVerifier(data_dir)
         self.logger = logging.getLogger(__name__)
@@ -132,7 +143,7 @@ class OptimizedRuleValidator:
         validation_result['optimization_params_loaded'] = True
         
         # Check if rule JSON was updated with optimized parameters
-        rule_json_path = os.path.join(self.scripts_dir, f"{rule_name}.json")
+        rule_json_path = os.path.join(self.rules_dir, f"{rule_name}.json")
         if not os.path.exists(rule_json_path):
             validation_result['issues'].append(f"Rule JSON file not found: {rule_json_path}")
             validation_result['status'] = 'error'

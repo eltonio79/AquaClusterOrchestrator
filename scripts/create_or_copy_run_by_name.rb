@@ -7,7 +7,7 @@ require 'json'
 def read_config_model_path
   begin
     base = File.dirname(__FILE__)
-    cfg_path = File.join(base, 'pipeline_config.json')
+    cfg_path = File.join(base, 'data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       raw = File.open(cfg_path, 'rb') { |f| f.read }
       raw = raw.sub(/^\xEF\xBB\xBF/, '')
@@ -105,7 +105,7 @@ begin
   dest_group = find_group(db, dest_group_name)
   raise "Destination group not found: #{dest_group_name}" if dest_group.nil?
   
-  cfg_path = File.join(File.dirname(__FILE__), 'pipeline_config.json')
+  cfg_path = File.join(File.dirname(__FILE__), '..', 'data', 'input', 'config', 'pipeline_config.json')
   cfg = nil
   if File.exist?(cfg_path)
     begin

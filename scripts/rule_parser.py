@@ -41,7 +41,7 @@ class RuleConfig:
 class RuleParser:
     """Parses .rul files and maps them to analysis configurations."""
     
-    def __init__(self, rules_dir: str = "scripts"):
+    def __init__(self, rules_dir: str = "data/input/rules"):
         self.rules_dir = rules_dir
         self.patterns = {
             # Comparison patterns

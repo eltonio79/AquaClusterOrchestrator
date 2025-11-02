@@ -1,11 +1,11 @@
 param(
-    [string]$ConfigPath = "scripts/pipeline_config.json"
+    [string]$ConfigPath = "data/input/config/pipeline_config.json"
 )
 
 # Interactive setup for Cluster Analysis Pipeline
 # - Prompts for ICM model path, output dir, ICMExchange path
 # - Optionally lists simulations to help pick baseline/candidate IDs
-# - Saves to scripts/pipeline_config.json
+# - Saves to data/input/config/pipeline_config.json
 
 function Read-ConfigIfExists {
     param([string]$Path)

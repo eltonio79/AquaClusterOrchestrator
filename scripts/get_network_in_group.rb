@@ -12,7 +12,7 @@ end
 begin
   # Use config if available
   db_path = nil
-  cfg = File.join('scripts', 'pipeline_config.json')
+  cfg = File.join('data', 'input', 'config', 'pipeline_config.json')
   if File.exist?(cfg)
     raw = File.open(cfg, 'rb') { |f| f.read }
     raw = raw.sub(/^\xEF\xBB\xBF/, '')

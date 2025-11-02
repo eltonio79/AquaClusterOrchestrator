@@ -6,7 +6,7 @@ param(
     [string]$AgentName = "",
     [string[]]$Rules,
     [switch]$NoExport,
-    [string]$ConfigPath = "scripts/pipeline_config.json"
+    [string]$ConfigPath = "data/input/config/pipeline_config.json"
 )
 
 # Dynamiczne wyznaczanie root projektu
@@ -216,7 +216,7 @@ function Start-NewAgent {
     param(
         [string[]]$Rules = @(),
         [bool]$NoExport = $false,
-        [string]$ConfigPath = "scripts/pipeline_config.json"
+        [string]$ConfigPath = "data/input/config/pipeline_config.json"
     )
     
     Write-Host "=== Starting New Agent ===" -ForegroundColor Cyan
@@ -389,7 +389,7 @@ function Start-ExistingAgent {
     # Wyciągnij parametry z command line
     $rules = @()
     $noExport = $false
-    $configPath = "scripts/pipeline_config.json"
+    $configPath = "data/input/config/pipeline_config.json"
     
     if ($info.Rules) {
         $rules = $info.Rules -split '\s+'
@@ -509,7 +509,7 @@ switch ($Action.ToLower()) {
         Write-Host "  -AgentName        - Agent name/timestamp to find (for start/stop/restart)"
         Write-Host "  -Rules            - Rules to process (for new agent)"
         Write-Host "  -NoExport         - Skip raster export (for new agent)"
-        Write-Host "  -ConfigPath       - Path to pipeline config (default: scripts/pipeline_config.json)"
+        Write-Host "  -ConfigPath       - Path to pipeline config (default: data/input/config/pipeline_config.json)"
         Write-Host ""
         Write-Host "Examples:" -ForegroundColor Cyan
         Write-Host "  .\scripts\manage_agents.ps1 list"

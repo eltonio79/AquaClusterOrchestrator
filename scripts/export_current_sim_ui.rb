@@ -94,7 +94,7 @@ begin
   cfg_model_path = nil
   cfg_data_dir = 'data/output'
   begin
-    cfg_path = File.join('scripts', 'pipeline_config.json')
+    cfg_path = File.join('data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       cfg = JSON.parse(File.read(cfg_path))
       cfg_model_path = cfg['model_path'] if cfg['model_path']

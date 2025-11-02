@@ -1,5 +1,5 @@
 param(
-    [string]$ConfigPath = "scripts/pipeline_config.json"
+    [string]$ConfigPath = "data/input/config/pipeline_config.json"
 )
 
 Write-Host "=== Interactive Runner ===" -ForegroundColor Cyan

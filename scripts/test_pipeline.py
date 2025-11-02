@@ -71,7 +71,7 @@ def test_rule_configs():
     
     try:
         # Check that all .rul files have corresponding .json files
-        rules_dir = "scripts"
+        rules_dir = "data/input/rules"
         rul_files = [f for f in os.listdir(rules_dir) if f.endswith('.rul')]
         json_files = [f for f in os.listdir(rules_dir) if f.endswith('.json')]
         

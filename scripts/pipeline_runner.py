@@ -46,8 +46,26 @@ class PipelineRunner:
         scripts_abs = os.path.abspath(scripts_dir)
         self.project_root = os.path.dirname(scripts_abs) if os.path.basename(scripts_abs) == 'scripts' else os.path.abspath('.')
         
+        # Determine rules directory - assume data/input/rules relative to data_dir
+        # If data_dir is data/output, rules_dir should be data/input/rules
+        data_dir_abs = os.path.abspath(data_dir)
+        data_parent = os.path.dirname(data_dir_abs)
+        rules_dir = os.path.join(data_parent, "input", "rules")
+        if not os.path.exists(rules_dir):
+            # Fallback: try data/input/rules relative to project root
+            rules_dir = os.path.join(self.project_root, "data", "input", "rules")
+        
+        # Determine config directory - assume data/input/config relative to data_dir
+        data_dir_abs = os.path.abspath(data_dir)
+        data_parent = os.path.dirname(data_dir_abs)
+        self.config_dir = os.path.join(data_parent, "input", "config")
+        if not os.path.exists(self.config_dir):
+            # Fallback: try data/input/config relative to project root
+            self.config_dir = os.path.join(self.project_root, "data", "input", "config")
+        
         # Initialize components
-        self.rule_parser = RuleParser(scripts_dir)
+        self.rule_parser = RuleParser(rules_dir)
+        self.rules_dir = rules_dir  # Store for reference
         self.cluster_processor = ClusterProcessor(data_dir)
         self.visualizer = RasterVisualizer(os.path.join(data_dir, "viz"))
         self.exporter = CombinedExporter(os.path.join(data_dir, "results"))
@@ -113,7 +131,7 @@ class PipelineRunner:
         # Load pipeline config for naming
         self._cfg = {}
         try:
-            cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+            cfg_path = os.path.join(self.config_dir, 'pipeline_config.json')
             if os.path.exists(cfg_path):
                 with open(cfg_path, 'r', encoding='utf-8-sig') as f:
                     self._cfg = json.load(f)
@@ -268,7 +286,7 @@ class PipelineRunner:
         
         # Load config for group/network names
         try:
-            cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+            cfg_path = os.path.join(self.config_dir, 'pipeline_config.json')
             with open(cfg_path, 'r', encoding='utf-8-sig') as f:
                 cfg = json.load(f)
                 src_group = cfg.get('source_group_name', '2D Demo - 2d rain')
@@ -304,7 +322,7 @@ class PipelineRunner:
         
         # Load config
         try:
-            cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+            cfg_path = os.path.join(self.config_dir, 'pipeline_config.json')
             with open(cfg_path, 'r', encoding='utf-8-sig') as f:
                 cfg = json.load(f)
                 src_group = cfg.get('source_group_name', '2D Demo - 2d rain')
@@ -355,7 +373,7 @@ class PipelineRunner:
             
             # Optionally export CSV results (2D/1D) for downstream analytics
             try:
-                cfg_path = os.path.join(self.scripts_dir, 'pipeline_config.json')
+                cfg_path = os.path.join(self.config_dir, 'pipeline_config.json')
                 export_csv = False
                 csv_selection = None
                 if os.path.exists(cfg_path):
@@ -595,8 +613,16 @@ def main():
     
     # Load config if available to override defaults
     run_sims = args.run_simulations
+    # Determine config directory
+    scripts_abs = os.path.abspath(args.scripts_dir)
+    project_root = os.path.dirname(scripts_abs) if os.path.basename(scripts_abs) == 'scripts' else os.path.abspath('.')
+    data_dir_abs = os.path.abspath(args.data_dir)
+    data_parent = os.path.dirname(data_dir_abs)
+    config_dir = os.path.join(data_parent, "input", "config")
+    if not os.path.exists(config_dir):
+        config_dir = os.path.join(project_root, "data", "input", "config")
     try:
-        cfg_path = os.path.join(args.scripts_dir, 'pipeline_config.json')
+        cfg_path = os.path.join(config_dir, 'pipeline_config.json')
         if os.path.exists(cfg_path):
             with open(cfg_path, 'r', encoding='utf-8-sig') as f:
                 cfg = json.load(f)

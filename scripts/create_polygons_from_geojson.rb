@@ -9,7 +9,7 @@ require 'json'
 
 def read_config_model_path
   begin
-    cfg_path = File.join('scripts', 'pipeline_config.json')
+    cfg_path = File.join('data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       raw = File.open(cfg_path, 'rb') { |f| f.read }
       raw = raw.sub(/^\xEF\xBB\xBF/, '')
@@ -85,7 +85,7 @@ begin
   # Try Clusters group
   begin
     cfg = nil
-    cfg_path = File.join('scripts', 'pipeline_config.json')
+    cfg_path = File.join('data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       raw = File.open(cfg_path, 'rb') { |f| f.read }
       raw = raw.sub(/^\xEF\xBB\xBF/, '')

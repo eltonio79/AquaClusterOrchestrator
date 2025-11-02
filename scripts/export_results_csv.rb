@@ -3,7 +3,7 @@
 #   export_results_csv.rb <simulation_id> <output_dir> [model_path] [json_selection]
 # - simulation_id: integer ID of the WSSimObject
 # - output_dir: destination folder for CSV files
-# - model_path: optional path to .icmm; if omitted, read from scripts/pipeline_config.json
+# - model_path: optional path to .icmm; if omitted, read from data/input/config/pipeline_config.json
 # - json_selection: optional JSON string like:
 #     [["Link",["ds_flow","ds_vel"]],["Node",["flood_depth","head"]]]
 #   If omitted, safe defaults will be used based on available attributes.
@@ -33,7 +33,7 @@ FileUtils.mkdir_p(output_dir) unless Dir.exist?(output_dir)
 # Read model_path from pipeline config if not provided
  def read_config_model_path
   begin
-    cfg_path = File.join('scripts','pipeline_config.json')
+    cfg_path = File.join('data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       raw = File.open(cfg_path,'rb'){|f| f.read }
       raw = raw.sub(/^\xEF\xBB\xBF/, '')

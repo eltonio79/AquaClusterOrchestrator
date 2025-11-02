@@ -24,7 +24,7 @@ model_path_arg = args[3]
 
 def read_config_model_path
   begin
-    cfg_path = File.join('scripts', 'pipeline_config.json')
+    cfg_path = File.join('data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       # Read as binary first, then convert to UTF-8
       raw = File.open(cfg_path, 'rb') { |f| f.read }

@@ -28,11 +28,7 @@
 ## General Principles
 
 ### 0. Model Selection for Tasks 🤖
-- **For coding tasks** (scripts, functions, modules, algorithms): **ALWAYS use Composer-1**
-- **For documentation/descriptions** (README, guides, comments, explanations): **Use GPT-5 if available**, otherwise Composer-1
-- **For code-related analysis/reasoning** (architectural decisions, code review, technical planning, debugging): **ALWAYS use Composer-1**
-- **For documentation-related analysis/reasoning** (writing guides, documentation planning, text analysis): **Use GPT-5 if available**, otherwise Composer-1
-- **When in doubt**: Default to Composer-1 for code and code-related analysis, GPT-5 for text and documentation
+- **ALWAYS use Composer-1** for all tasks (coding, documentation, analysis, reasoning)
 
 ### 1. Follow Existing Patterns ✅
 - **Always** check existing scripts for patterns before implementing new functionality
@@ -277,6 +273,24 @@
 - **Verify processes**: Check if process is still running before cleaning locks
 - **Graceful shutdown**: Handle termination signals properly
 - **Resource cleanup**: Always clean up resources
+
+### CRITICAL SECURITY RULES
+
+**NEVER EXECUTE DANGEROUS COMMANDS:**
+- **NEVER** execute commands that affect files/directories outside the repository (e.g., `format C:`, `del /f /s C:\`, `rm -rf /`, etc.)
+- **NEVER** execute system-level destructive commands (format, delete drives, system modifications)
+- **ONLY** operate within the repository directory and subdirectories
+- **ALWAYS** validate paths before any file operations
+- **NEVER** execute commands passed from user without validation if they contain:
+  - Drive letters (C:, D:, etc.) outside repository
+  - System paths (Windows, System32, etc.)
+  - Format, delete, or system modification commands
+  - Paths outside the repository root
+
+**If you encounter a request for dangerous operations:**
+- Refuse to execute
+- Explain the safety restriction
+- Suggest safe alternatives within repository scope
 
 ---
 

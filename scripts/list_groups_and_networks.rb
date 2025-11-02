@@ -3,7 +3,7 @@ require 'json'
 def read_config_model_path
   begin
     base = File.dirname(__FILE__)
-    cfg_path = File.join(base, 'pipeline_config.json')
+    cfg_path = File.join(base, 'data', 'input', 'config', 'pipeline_config.json')
     if File.exist?(cfg_path)
       raw = File.open(cfg_path, 'rb') { |f| f.read }
       raw = raw.sub(/^\xEF\xBB\xBF/, '')
@@ -32,7 +32,7 @@ begin
   if model_path.nil? || model_path.empty?
     model_path = 'C:/Users/brodowm/OneDrive - Autodesk/Documents/InfoWorks ICM/Standalone Databases/Raster 2d Export/Raster_2d_Export.icmm'
   end
-  raise 'Provide model path or set scripts/pipeline_config.json' if model_path.nil? || model_path.empty?
+  raise 'Provide model path or set data/input/config/pipeline_config.json' if model_path.nil? || model_path.empty?
   db = WSApplication.open(model_path)
 
   groups = db.model_object_collection('Model Group')

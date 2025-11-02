@@ -2,7 +2,7 @@ import os, sys, json, uuid, traceback
 
 BASE = os.getenv("ICM_OPT_BASE", os.getcwd())
 OUT  = os.getenv("ICM_OUTPUT_DIR", os.path.join(BASE, "data", "output"))
-TPL  = os.getenv("ICM_TEMPLATES",  os.path.join(BASE, "tools", "templates"))
+TPL  = os.getenv("ICM_TEMPLATES",  os.path.join(BASE, "data", "input", "templates"))
 os.makedirs(OUT, exist_ok=True)
 
 def ok(result): return {"ok": True, "result": result}
@@ -65,7 +65,7 @@ def select_areas(params):
     return ok({"path": out_path})
 
 def run_optimizer(params):
-    cfg = params.get("config_path", os.path.join(TPL, "optim_config.json"))
+    cfg = params.get("config_path", os.path.join(TPL, "optimization_template.json"))
     if not os.path.isabs(cfg):
         cfg = os.path.join(BASE, cfg)
     if not os.path.isfile(cfg):

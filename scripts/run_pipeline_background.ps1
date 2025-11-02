@@ -1,7 +1,7 @@
 param(
     [string[]]$Rules,
     [switch]$NoExport,
-    [string]$ConfigPath = "scripts/pipeline_config.json",
+    [string]$ConfigPath = "data/input/config/pipeline_config.json",
     [string]$ModelPath = "",
     [switch]$SkipModelWait
 )
